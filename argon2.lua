@@ -43,4 +43,9 @@ function _M.encrypt(pwd, salt, options)
                         pwd, salt, options.argon2d == true and "d" or "i")
 end
 
+function _M.verify(encrypted, plain)
+  local m = string.match(encrypted, "argon2d")
+  return libargon2.verify(encrypted, plain, m ~= nil and "d" or "i")
+end
+
 return _M

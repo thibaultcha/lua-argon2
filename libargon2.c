@@ -31,11 +31,10 @@ static int hash(lua_State *L) {
   salt = luaL_checklstring(L, 5, &saltlen);
 
   uint8_t o = luaL_checkoption(L, 6, "i", type_opts);
-  argon2_type type = types[o];
 
   argon2_error_codes result = argon2_hash(t_cost, m_cost, parallelism, plain,
             plainlen, salt, saltlen, NULL, HASH_LEN,
-            encoded, ENCODED_LEN, type);
+            encoded, ENCODED_LEN, types[o]);
   if (result != ARGON2_OK) {
     const char *err_msg = error_message(result);
     lua_pushnil(L);
@@ -47,8 +46,31 @@ static int hash(lua_State *L) {
   return 1;
 }
 
+static int verify(lua_State *L) {
+  lua_settop(L, 3);
+
+  const char *plain, *encoded;
+  size_t plainlen;
+
+  encoded = luaL_checkstring(L, 1);
+  plain = luaL_checklstring(L, 2, &plainlen);
+
+  uint8_t o = luaL_checkoption(L, 3, "i", type_opts);
+
+  argon2_error_codes result = argon2_verify(encoded, plain, plainlen, types[o]);
+  if (result != ARGON2_OK) {
+    lua_pushboolean(L, 0);
+    lua_pushliteral(L, "The password did not match.");
+    return 2;
+  }
+
+  lua_pushboolean(L, 1);
+  return 1;
+}
+
 static const luaL_Reg libargon2[] = {
   {"hash", hash},
+  {"verify", verify},
   {NULL, NULL}
 };
 
