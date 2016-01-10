@@ -1,0 +1,29 @@
+sudo: false
+notifications:
+  email: false
+env:
+  global:
+    - LUAROCKS_VERSION=2.2.2
+    - LUA_DIR=$HOME/lua
+    - LUAJIT_DIR=$HOME/luajit
+    - LUAROCKS_DIR=$HOME/luarocks
+    - ARGON2_DIR=$HOME/argon2
+  matrix:
+    - LUA=lua5.1
+    - LUA=lua5.2
+    - LUA=lua5.3
+    - LUA=luajit-2.0
+    - LUA=luajit-2.1
+before_install:
+  - bash .ci/setup_lua.sh
+  - bash .ci/setup_argon2.sh
+  - export PATH=$LUA_DIR/src:$LUAJIT_DIR/bin:$LUAROCKS_DIR/bin:$PATH
+  - export ARGON2_INCDIR=$ARGON2_DIR/src
+  - export ARGON2_LIBDIR=$ARGON2_DIR
+  - export LD_LIBRARY_PATH=$ARGON2_DIR
+install:
+  - luarocks install busted
+  - luarocks make argon2-*.rockspec
+  - make clean
+script:
+  - make test

@@ -1,4 +1,4 @@
-local libargon2 = require "libargon2"
+local libargon2 = require "lua_argon2"
 local match = string.match
 local error = error
 local type = type

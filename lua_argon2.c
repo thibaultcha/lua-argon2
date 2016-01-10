@@ -68,13 +68,13 @@ static int verify(lua_State *L) {
   return 1;
 }
 
-static const luaL_Reg libargon2[] = {
+static const luaL_Reg lua_argon2[] = {
   {"hash", hash},
   {"verify", verify},
   {NULL, NULL}
 };
 
-int luaopen_libargon2(lua_State *L) {
-  luaL_newlib(L, libargon2);
+int luaopen_lua_argon2(lua_State *L) {
+  luaL_newlib(L, lua_argon2);
   return 1;
 }
