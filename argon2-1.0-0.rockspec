@@ -1,0 +1,25 @@
+package = "argon2"
+version = "1.0-0"
+source = {
+  url = "https://github.com/thibaultCha/lua-argon2",
+  tag = "1.0-0"
+}
+description = {
+  summary = "The password hash Argon2, winner of PHC",
+  homepage = "https://github.com/P-H-C/phc-winner-argon2",
+  license = "CC0"
+}
+build = {
+  type = "make",
+  build_variables = {
+    LUA="$(LUA)",
+    CFLAGS="$(CFLAGS)",
+    LIBFLAG="$(LIBFLAG)",
+    LUA_LIB="-L$(LUA_LIBDIR)",
+    LUA_INC="-I$(LUA_INCDIR)"
+  },
+  install_variables = {
+    INST_LIBDIR = "$(LIBDIR)",
+    INST_LUADIR = "$(LUADIR)"
+  }
+}

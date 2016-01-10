@@ -1,4 +1,7 @@
 local libargon2 = require "libargon2"
+local match = string.match
+local error = error
+local type = type
 
 local opts = {
   timeCost = 2,
@@ -44,7 +47,7 @@ function _M.encrypt(pwd, salt, options)
 end
 
 function _M.verify(encrypted, plain)
-  local m = string.match(encrypted, "argon2d")
+  local m = match(encrypted, "argon2d")
   return libargon2.verify(encrypted, plain, m ~= nil and "d" or "i")
 end
 

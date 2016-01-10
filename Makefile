@@ -1,32 +1,35 @@
-RUN = libargon2
+NAME = argon2
+LIBNAME = lib$(NAME)
 
 CC = gcc
-LUA ?= luajit
-LUA_LIBDIR ?= $(shell pkg-config $(LUA) --libs)
-LUA_INCDIR ?= $(shell pkg-config $(LUA) --cflags)
-
+LUA ?= lua5.1
+LIBFLAG ?= -shared
 CFLAGS ?= -O2 -Wall -Werror
+LUA_INC ?= $(shell pkg-config $(LUA) --cflags)
+LUA_LIB ?= $(shell pkg-config $(LUA) --libs)
+ARGON2_INC ?= -I/usr/local/include
+ARGON2_LIB ?= -L/usr/local/lib -largon2
 
-ARGON2_INCDIR ?= -I../../tmp/phc-winner-argon2/src
-ARGON2_LIBDIR ?= -L../../tmp/phc-winner-argon2 -largon2
+INC = $(LUA_INC) $(ARGON2_INC)
+LIB = $(LUA_LIB) $(ARGON2_LIB)
 
-INCDIR = $(LUA_INCDIR) $(ARGON2_INCDIR)
-LIBDIR = $(LUA_LIBDIR) $(ARGON2_LIBDIR)
+.PHONY: all install test clean
 
-.PHONY: all clean test $(RUN)
-
-all: $(RUN)
-
-$(RUN): $(RUN).so test
+all: $(LIBNAME).so
 
 %.so: %.o
-	@$(CC) -shared $(LIBDIR) -o $@ $<
+	$(CC) $(LIBFLAG) $(LIB) -o $@ $<
 
 %.o: %.c
-	@$(CC) -c $(CFLAGS) -fPIC $(INCDIR) $< -o $@
+	@echo $(ARGON2_INC)
+	$(CC) -c $(CFLAGS) -fPIC $(INC) $< -o $@
+
+install:
+	cp $(LIBNAME).so $(INST_LIBDIR)
+	cp $(NAME).lua $(INST_LUADIR)
 
 test:
 	@busted test.lua
 
 clean:
-	rm -f *.so *.o *.rock
+	rm -f *.so *.o

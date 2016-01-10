@@ -18,10 +18,11 @@ static const enum Argon2_type types[] = {Argon2_d, Argon2_i};
 static int hash(lua_State *L) {
   lua_settop(L, 6);
 
+  char encoded[ENCODED_LEN];
+
   const char *plain, *salt;
   size_t plainlen, saltlen;
-
-  char encoded[ENCODED_LEN];
+  uint8_t o;
 
   uint32_t t_cost = luaL_checknumber(L, 1);
   uint32_t m_cost = luaL_checknumber(L, 2);
@@ -29,8 +30,7 @@ static int hash(lua_State *L) {
 
   plain = luaL_checklstring(L, 4, &plainlen);
   salt = luaL_checklstring(L, 5, &saltlen);
-
-  uint8_t o = luaL_checkoption(L, 6, "i", type_opts);
+  o = luaL_checkoption(L, 6, "i", type_opts);
 
   argon2_error_codes result = argon2_hash(t_cost, m_cost, parallelism, plain,
             plainlen, salt, saltlen, NULL, HASH_LEN,
@@ -51,11 +51,11 @@ static int verify(lua_State *L) {
 
   const char *plain, *encoded;
   size_t plainlen;
+  uint8_t o;
 
   encoded = luaL_checkstring(L, 1);
   plain = luaL_checklstring(L, 2, &plainlen);
-
-  uint8_t o = luaL_checkoption(L, 3, "i", type_opts);
+  o = luaL_checkoption(L, 3, "i", type_opts);
 
   argon2_error_codes result = argon2_verify(encoded, plain, plainlen, types[o]);
   if (result != ARGON2_OK) {
