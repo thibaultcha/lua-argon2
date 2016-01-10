@@ -1,0 +1,35 @@
+local argon2 = require "argon2"
+
+describe("hash()", function()
+  it("should throw error on invalid argument", function()
+    assert.has_error(function()
+      argon2.hash("")
+    end, "bad argument #1 to 'hash' (number expected, got string)")
+
+    assert.has_error(function()
+      argon2.hash(3, "")
+    end, "bad argument #2 to 'hash' (number expected, got string)")
+
+    assert.has_error(function()
+      argon2.hash(3, 12, "")
+    end, "bad argument #3 to 'hash' (number expected, got string)")
+
+    assert.has_error(function()
+      argon2.hash(3, 12, 1, nil)
+    end, "bad argument #4 to 'hash' (string expected, got nil)")
+
+    assert.has_error(function()
+      argon2.hash(3, 12, 1, "", nil)
+    end, "bad argument #5 to 'hash' (string expected, got nil)")
+  end)
+  it("should return error as string", function()
+    local hash, err = argon2.hash(3, 12, 1, "", "")
+    assert.falsy(hash)
+    assert.equal("Salt is too short", err)
+  end)
+  it("should return a hash", function()
+    local hash, err = argon2.hash(3, 12, 1, "password", "somesalt")
+    print(hash)
+    print(err)
+  end)
+end)
