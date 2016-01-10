@@ -1,9 +1,6 @@
 #include <lua.h>
 #include <lauxlib.h>
 #include <lualib.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include <argon2.h>
 
 #if LUA_VERSION_NUM < 502
@@ -26,14 +23,14 @@ static int hash(lua_State *L) {
 
   char encoded[ENCODED_LEN];
 
-  uint32_t t_cost = luaL_checknumber(L, 1); // time cost: 3
-  uint32_t m_cost = luaL_checknumber(L, 2); // memory cost: 12
-  uint32_t parallelism = luaL_checknumber(L, 3); // parallelism: 1
+  uint32_t t_cost = luaL_checknumber(L, 1);
+  uint32_t m_cost = luaL_checknumber(L, 2);
+  uint32_t parallelism = luaL_checknumber(L, 3);
 
-  plain = luaL_checklstring(L, 4, &plainlen); // plain
-  salt = luaL_checklstring(L, 5, &saltlen); // salt
+  plain = luaL_checklstring(L, 4, &plainlen);
+  salt = luaL_checklstring(L, 5, &saltlen);
 
-  uint8_t o = luaL_checkoption(L, 6, "d", type_opts);
+  uint8_t o = luaL_checkoption(L, 6, "i", type_opts);
   argon2_type type = types[o];
 
   argon2_error_codes result = argon2_hash(t_cost, m_cost, parallelism, plain,
@@ -50,12 +47,12 @@ static int hash(lua_State *L) {
   return 1;
 }
 
-static const luaL_Reg argon2[] = {
+static const luaL_Reg libargon2[] = {
   {"hash", hash},
   {NULL, NULL}
- };
+};
 
-int luaopen_argon2(lua_State *L) {
-  luaL_newlib(L, argon2);
+int luaopen_libargon2(lua_State *L) {
+  luaL_newlib(L, libargon2);
   return 1;
 }

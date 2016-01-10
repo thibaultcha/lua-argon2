@@ -1,4 +1,4 @@
-RUN = argon2
+RUN = libargon2
 
 CC = gcc
 LUA ?= luajit
@@ -13,7 +13,7 @@ ARGON2_LIBDIR ?= -L../../tmp/phc-winner-argon2 -largon2
 INCDIR = $(LUA_INCDIR) $(ARGON2_INCDIR)
 LIBDIR = $(LUA_LIBDIR) $(ARGON2_LIBDIR)
 
-.PHONY: all clean argon2 test
+.PHONY: all clean test $(RUN)
 
 all: $(RUN)
 
