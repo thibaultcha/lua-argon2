@@ -1,4 +1,3 @@
-PWD = $(shell pwd)
 LIB_NAME = argon2
 BRIDGE_NAME = l$(LIB_NAME)
 
@@ -8,12 +7,13 @@ LIBFLAG       ?= -shared
 LUA_CFLAGS    ?= -O2 -Wall -Werror -fPIC
 
 PREFIX        ?= /usr/local
-LUA_INCDIR    ?= $(PREFIX)/include
-LUA_LIBDIR    ?= $(PREFIX)/lib/lua/$(LUA_VERSION)
-ARGON2_INCDIR ?= $(PREFIX)/include
-ARGON2_LIBDIR ?= $(PREFIX)/lib/
-BUILD_CFLAGS   = -I$(LUA_INCDIR) -I$(ARGON2_INCDIR)
-BUILD_LDFLAGS  = -L$(LUA_LIBDIR) -L$(ARGON2_LIBDIR) -largon2
+LUA_INCDIR    ?= -I$(PREFIX)/include
+LUA_LIBDIR    ?= -L$(PREFIX)/lib/lua/$(LUA_VERSION)
+ARGON2_INCDIR ?= -I$(PREFIX)/include
+ARGON2_LIBDIR ?= -L$(PREFIX)/lib/
+
+BUILD_CFLAGS   = $(LUA_INCDIR) $(ARGON2_INCDIR)
+BUILD_LDFLAGS  = $(LUA_LIBDIR) $(ARGON2_LIBDIR) -largon2
 
 .PHONY: all install test clean $(LIB_NAME)
 
