@@ -4,7 +4,7 @@ Lua binding for [Argon2]. Compatible with Lua 5.1, 5.2, 5.3, LuaJIT 2.0 and 2.1.
 
 ### Prerequisites
 
-[Argon2] must be compiled and available somwhere in your system.
+[Argon2] must be compiled and available somewhere in your system.
 
 ### Install
 
