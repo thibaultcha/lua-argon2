@@ -14,7 +14,9 @@ build = {
   modules = {
     largon2 = {
       sources = {"largon2.c"},
-      libraries = {"argon2"}
+      libraries = {"argon2"},
+      incdirs = {"$(ARGON2_INCDIR)"},
+      libdirs = {"$(ARGON2_LIBDIR)"}
     }
   }
 }

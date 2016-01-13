@@ -4,9 +4,11 @@ notifications:
 env:
   global:
     - LUAROCKS_VERSION=2.2.2
+    - ARGON2_VERSION=20151206
     - LUA_DIR=$HOME/lua
     - LUAJIT_DIR=$HOME/luajit
     - LUAROCKS_DIR=$HOME/luarocks
+    - ARGON2_DIR=$HOME/argon2
   matrix:
     - LUA=lua5.1
     - LUA=lua5.2
@@ -15,10 +17,11 @@ env:
     - LUA=luajit-2.1
 before_install:
   - bash .ci/setup_lua.sh
+  - bash .ci/setup_argon2.sh
   - export PATH=$LUA_DIR/src:$LUAJIT_DIR/bin:$LUAROCKS_DIR/bin:$PATH
 install:
   - luarocks install busted
-  - luarocks make argon2-*.rockspec
+  - luarocks make argon2-*.rockspec ARGON2_INCDIR=$ARGON2_DIR/src ARGON2_LIBDIR=$ARGON2_DIR
   - make clean
 script:
   - make test
