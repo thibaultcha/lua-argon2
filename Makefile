@@ -10,10 +10,10 @@ PREFIX        ?= /usr/local
 LUA_INCDIR    ?= -I$(PREFIX)/include
 LUA_LIBDIR    ?= -L$(PREFIX)/lib/lua/$(LUA_VERSION)
 ARGON2_INCDIR ?= -I$(PREFIX)/include
-ARGON2_LIBDIR ?= -L$(PREFIX)/lib/
+ARGON2_LIBDIR ?= -L$(PREFIX)/lib/ -largon2
 
 BUILD_CFLAGS   = $(LUA_INCDIR) $(ARGON2_INCDIR)
-BUILD_LDFLAGS  = $(LUA_LIBDIR) $(ARGON2_LIBDIR) -largon2
+BUILD_LDFLAGS  = $(LUA_LIBDIR) $(ARGON2_LIBDIR)
 
 .PHONY: all install test clean $(LIB_NAME)
 

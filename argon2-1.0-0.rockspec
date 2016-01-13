@@ -10,15 +10,11 @@ description = {
   license = "MIT"
 }
 build = {
-  type = "make",
-  build_variables = {
-    LUA_CFLAGS="$(CFLAGS)",
-    LIBFLAG="$(LIBFLAG)",
-    LUA_INCDIR="-I$(LUA_INCDIR)",
-    LUA_LIBDIR="-L$(LUA_LIBDIR)"
-  },
-  install_variables = {
-    INST_LIBDIR = "$(LIBDIR)",
-    INST_LUADIR = "$(LUADIR)"
+  type = "builtin",
+  modules = {
+    largon2 = {
+      sources = {"largon2.c"},
+      libraries = {"argon2"}
+    }
   }
 }
