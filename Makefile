@@ -1,34 +1,33 @@
-NAME = argon2
-LIBNAME = lua_$(NAME)
+LIB_NAME = argon2
+BRIDGE_NAME = l$(LIB_NAME)
 
-CC ?= gcc
-LUA_VERSION ?= 5.1
+CC            ?= gcc
+LUA_VERSION   ?= 5.1
+LIBFLAG       ?= -shared
+LUA_CFLAGS    ?= -O2 -Wall -Werror -fPIC
 
-PREFIX ?=        /usr/local
-LUA_INCDIR ?=    $(PREFIX)/include
-LUA_LIBDIR ?=    $(PREFIX)/lib/lua/$(LUA_VERSION)
-ARGON2_INCDIR ?= $(PREFIX)/include
-ARGON2_LIBDIR ?= $(PREFIX)/lib
+PREFIX        ?= /usr/local
+LUA_INCDIR    ?= -I$(PREFIX)/include
+LUA_LIBDIR    ?= -L$(PREFIX)/lib/lua/$(LUA_VERSION)
+ARGON2_INCDIR ?= -I$(PREFIX)/include
+ARGON2_LIBDIR ?= -L$(PREFIX)/lib/ -largon2
 
-BUILD_CFLAGS = -I$(LUA_INCDIR) -I$(ARGON2_INCDIR)
-BUILD_LDFLAGS = -L$(LUA_LIBDIR) -L$(ARGON2_LIBDIR) -largon2
+BUILD_CFLAGS   = $(LUA_INCDIR) $(ARGON2_INCDIR)
+BUILD_LDFLAGS  = $(LUA_LIBDIR) $(ARGON2_LIBDIR)
 
-LIBFLAG ?= -shared
-CFLAGS ?= -O2 -Wall -Werror -fPIC
+.PHONY: all install test clean $(LIB_NAME)
 
-.PHONY: all install test clean
+all: $(BRIDGE_NAME).so
 
-all: $(LIBNAME).so
+$(BRIDGE_NAME).so: $(BRIDGE_NAME).o
+	$(CC) $(LIBFLAG) -o $@ $< $(BUILD_LDFLAGS) $(SO_LDFLAGS)
 
-%.so: %.o
-	$(CC) $(LIBFLAG) -o $@ $< $(BUILD_LDFLAGS)
-
-%.o: %.c
-	$(CC) -c $(CFLAGS) $< -o $@ $(BUILD_CFLAGS)
+$(BRIDGE_NAME).o: $(BRIDGE_NAME).c
+	$(CC) -c $(LUA_CFLAGS) $< -o $@ $(BUILD_CFLAGS)
 
 install:
-	cp $(LIBNAME).so $(INST_LIBDIR)
-	cp $(NAME).lua $(INST_LUADIR)
+	cp $(BRIDGE_NAME).so $(INST_LIBDIR)
+	cp $(LIB_NAME).lua $(INST_LUADIR)
 
 test:
 	@busted test.lua
