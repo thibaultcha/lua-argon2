@@ -24,4 +24,4 @@ install:
   - luarocks make argon2-*.rockspec ARGON2_INCDIR=$ARGON2_DIR/src ARGON2_LIBDIR=$ARGON2_DIR
   - make clean
 script:
-  - make test
+  - busted -v -o gspec test.lua
