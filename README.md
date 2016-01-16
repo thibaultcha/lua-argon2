@@ -1,4 +1,4 @@
-# lua-argon2 [![Build Status][badge-travis-image]][badge-travis-url]
+# lua-argon2 [![Build Status][badge-travis-image]][badge-travis-url] ![Module Version][badge-version-image]
 
 Lua binding for [Argon2]. Compatible with Lua 5.1, 5.2, 5.3, LuaJIT 2.0 and 2.1.
 
@@ -75,3 +75,4 @@ Work licensed under the MIT License. Please check [P-H-C/phc-winner-argon2][Argo
 [Argon2]: https://github.com/P-H-C/phc-winner-argon2
 [badge-travis-url]: https://travis-ci.org/thibaultCha/lua-argon2
 [badge-travis-image]: https://travis-ci.org/thibaultCha/lua-argon2.svg?branch=master
+[badge-version-image]: https://img.shields.io/badge/version-1.0.0-blue.svg?style=flat
