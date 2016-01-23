@@ -37,7 +37,7 @@ assert(err == nil)
 assert(hash == "$argon2i$m=12,t=2,p=1$c29tZXNhbHQ$ltrjNRFqTXmsHj++TFGZxg+zSg8hSrrSJiViCRns1HM")
 
 -- Argon2d
-hash, err = argon2.encrypt("password", "somesalt", {argon2d = true})
+local hash, err = argon2.encrypt("password", "somesalt", {argon2d = true})
 assert(err == nil)
 assert(hash == "$argon2d$m=12,t=2,p=1$c29tZXNhbHQ$mfklun4fYCbv2Hw0UnZZ56xAqWbjD+XRMSN9h6SfLe4")
 
@@ -63,7 +63,7 @@ local ok, err = argon2.verify(hash, "password")
 assert(err == nil)
 assert(ok == true)
 
-ok, err = argon2.verify(hash, "passworld")
+local ok, err = argon2.verify(hash, "passworld")
 assert(err == "The password did not match.")
 assert(ok == false)
 ```
