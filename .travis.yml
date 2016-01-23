@@ -21,7 +21,10 @@ before_install:
   - export PATH=$LUA_DIR/src:$LUAJIT_DIR/bin:$LUAROCKS_DIR/bin:$PATH
 install:
   - luarocks install busted
+  - luarocks install luacov
+  - luarocks install luacov-coveralls
   - luarocks make argon2-*.rockspec ARGON2_INCDIR=$ARGON2_DIR/src ARGON2_LIBDIR=$ARGON2_DIR
   - make clean
 script:
-  - busted -v -o gtest --repeat 3 test.lua
+  - busted -v -o gtest --repeat 3 --coverage test.lua
+after_success: luacov-coveralls -i argon2
