@@ -3,11 +3,8 @@ notifications:
   email: false
 env:
   global:
-    - LUAROCKS_VERSION=2.2.2
+    - LUAROCKS_VERSION=2.3.0
     - ARGON2_VERSION=20151206
-    - LUA_DIR=$HOME/lua
-    - LUAJIT_DIR=$HOME/luajit
-    - LUAROCKS_DIR=$HOME/luarocks
     - ARGON2_DIR=$HOME/argon2
   matrix:
     - LUA=lua5.1
@@ -16,15 +13,18 @@ env:
     - LUA=luajit-2.0
     - LUA=luajit-2.1
 before_install:
-  - bash .ci/setup_lua.sh
+  - source .ci/setenv_lua.sh
   - bash .ci/setup_argon2.sh
-  - export PATH=$LUA_DIR/src:$LUAJIT_DIR/bin:$LUAROCKS_DIR/bin:$PATH
-install:
+  - pip install --user cpp-coveralls
   - luarocks install busted
-  - luarocks install luacov
   - luarocks install luacov-coveralls
-  - luarocks make argon2-*.rockspec ARGON2_INCDIR=$ARGON2_DIR/src ARGON2_LIBDIR=$ARGON2_DIR
+install:
+  - luarocks make argon2-*.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage" ARGON2_INCDIR=$ARGON2_DIR/src ARGON2_LIBDIR=$ARGON2_DIR
   - make clean
 script:
   - busted -v -o gtest --repeat 3 --coverage test.lua
-after_success: luacov-coveralls -i argon2
+after_success:
+  - coveralls --dump c.report.json
+  - luacov-coveralls -i argon2 -j c.report.json
+cache:
+  pip: true
