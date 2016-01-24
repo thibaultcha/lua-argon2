@@ -27,7 +27,7 @@ $(BRIDGE_NAME).o: src/$(BRIDGE_NAME).c
 
 install:
 	cp $(BRIDGE_NAME).so $(INST_LIBDIR)
-	cp $(LIB_NAME).lua $(INST_LUADIR)
+	cp src/$(LIB_NAME).lua $(INST_LUADIR)
 
 test:
 	@busted spec
