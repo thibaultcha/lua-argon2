@@ -68,6 +68,10 @@ assert(err == "The password did not match.")
 assert(ok == false)
 ```
 
+### Documentation
+
+The full documentation is available [online](http://thibaultcha.github.io/lua-argon2/).
+
 ### License
 
 Work licensed under the MIT License. Please check [P-H-C/phc-winner-argon2][Argon2] for license over Argon2 and the reference implementation.
