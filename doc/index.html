@@ -1,0 +1,224 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>lua-argon2 documentation</title>
+    <link rel="stylesheet" href="ldoc_pale.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>lua-argon2</h1>
+
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Tables">Tables</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
+  <li><strong>argon2</strong></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>argon2</code></h1>
+<p>Lua Argon2
+ Lua binding for the Argon2 password hashing function.</p>
+<p> See the <a href="https://github.com/P-H-C/phc-winner-argon2">Argon2 documentation</a> at the same time while you consult this binding's documentation.</p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Release</strong>: 1.0.0</li>
+        <li><strong>Author</strong>: thibaultcha</li>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#encrypt">encrypt (pwd, salt, options)</a></td>
+	<td class="summary">Encrypt a plain string.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#verify">verify (encrypted, plain)</a></td>
+	<td class="summary">Verify a plain string against a hash.</td>
+	</tr>
+</table>
+<h2><a href="#Tables">Tables</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#options">options</a></td>
+	<td class="summary">Hashing options.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "encrypt"></a>
+    <strong>encrypt (pwd, salt, options)</strong>
+    </dt>
+    <dd>
+    Encrypt a plain string.
+ Uses Argon2i (by default) or Argon2d to hash a password (or any plain string).
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">pwd</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Password (or plain string) to hash.
+        </li>
+        <li><span class="parameter">salt</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Salt to use to hash pwd. Must not exceed 16 characters.
+        </li>
+        <li><span class="parameter">options</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         Options with which to hash the plain string. See <a href="index.html#options">options</a>.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        <code>hash</code>: Hash computed by Argon2 or nil if an error occurred.</li>
+        <li>
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        <code>error</code>: <code>nil</code> or a string describing the error if any.</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "verify"></a>
+    <strong>verify (encrypted, plain)</strong>
+    </dt>
+    <dd>
+    Verify a plain string against a hash.
+ Uses Argon2i or Argon2d to verify if a given password (or any plain string)
+ verifies against a hash encrypted with Argon2.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">encrypted</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Hash to verify the plain string against.
+        </li>
+        <li><span class="parameter">plain</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Plain string to verify.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><span class="type">boolean</span></span>
+        <code>ok</code>: <code>true</code> if the password matched, <code>false</code> otherwise.</li>
+        <li>
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        <code>error</code>: <code>nil</code> or a string describing the error if any.</li>
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Tables"></a>Tables</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "options"></a>
+    <strong>options</strong>
+    </dt>
+    <dd>
+    Hashing options.
+ When using <a href="index.html#encrypt">encrypt</a>, the third argument is an table describing Argon2
+ options to use.
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">timeCost</span>
+
+<p> Number of iterations (<code>number</code>)</p>
+<pre><code> type: number
+ default: 2
+</code></pre>
+
+        </li>
+        <li><span class="parameter">memoryCost</span>
+
+<p> Sets memory usage to m_cost kibibytes (<code>number</code>)</p>
+<pre><code> type: number
+ default: 12
+</code></pre>
+
+        </li>
+        <li><span class="parameter">parallelism</span>
+
+<p> Number of threads and compute lanes (<code>number</code>)</p>
+<pre><code> type: number
+ default: 1
+</code></pre>
+
+        </li>
+        <li><span class="parameter">argon2d</span>
+
+<p> If <code>true</code>, will use argon2d hashing (<code>boolean</code>)</p>
+<pre><code> type: boolean
+ default: false
+</code></pre>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2016-01-28 21:55:11 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
