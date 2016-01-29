@@ -13,7 +13,7 @@ local error = error
 local type = type
 
 --- Hashing options.
--- When using `encrypt`, the third argument is an table describing Argon2
+-- When using `encrypt`, the third argument is a table describing the Argon2
 -- options to use.
 -- @field timeCost Number of iterations (`number`)
 --     type: number
