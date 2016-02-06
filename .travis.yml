@@ -12,12 +12,11 @@ env:
     - LUA="luajit 2.0"
     - LUA="luajit 2.1"
 before_install:
+  - bash .ci/setup_argon2.sh
   - pip install --user hererocks cpp-coveralls
   - hererocks lua_install -r^ --$LUA
   - export PATH=$PATH:$PWD/lua_install/bin
-  - bash .ci/setup_argon2.sh
   - luarocks install busted
-  - luarocks install luacov-coveralls
 install:
   - luarocks make argon2-*.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage" ARGON2_INCDIR=$ARGON2_DIR/src ARGON2_LIBDIR=$ARGON2_DIR
   - make clean
@@ -25,6 +24,5 @@ script:
   - busted -v -o gtest --repeat 3 --coverage spec
 after_success:
   - coveralls -i src --dump c.report.json
-  - luacov-coveralls -i src -j c.report.json
 cache:
   pip: true
