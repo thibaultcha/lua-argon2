@@ -85,7 +85,7 @@ static int encrypt(lua_State *L) {
 
     if (!lua_isnil(L, 3)) {
         if (!lua_istable(L, 3)) {
-            return luaL_argerror(L, 1, "expected to be a table");
+            return luaL_argerror(L, 3, "expected to be a table");
         }
         get_option(L, "t_cost", &t_cost);
         get_option(L, "m_cost", &m_cost);
@@ -152,7 +152,7 @@ static const luaL_Reg argon2[] = {
 int luaopen_argon2(lua_State *L) {
     luaL_newlib(L, argon2);
 
-    lua_pushstring(L, "1.1.0");
+    lua_pushstring(L, "1.1.1");
     lua_setfield(L, -2, "_VERSION");
 
     lua_pushstring(L, "Thibault Charbonnier");

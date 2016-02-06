@@ -2,7 +2,7 @@ local argon2 = require "argon2"
 
 describe("argon2", function()
   it("_VERSION field", function()
-    assert.equal("1.1.0", argon2._VERSION)
+    assert.equal("1.1.1", argon2._VERSION)
   end)
   it("_AUTHOR field", function()
     assert.equal("Thibault Charbonnier", argon2._AUTHOR)
@@ -24,6 +24,10 @@ describe("encrypt()", function()
     assert.has_error(function()
       argon2.encrypt("", nil)
     end, "bad argument #2 to 'encrypt' (string expected, got nil)")
+
+    assert.has_error(function()
+      argon2.encrypt("", "", "")
+    end, "bad argument #3 to 'encrypt' (expected to be a table)")
 
     assert.has_error(function()
       argon2.encrypt("", "", {t_cost = ""})
