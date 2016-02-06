@@ -14,7 +14,7 @@ This binding can be installed with [Luarocks](https://luarocks.org):
 $ luarocks install argon2 ARGON2_LIBDIR="..." ARGON2_INCDIR="..."
 ```
 
-`ARGON2_LIBDIR` must contain the `argon2.h` header file, and `ARGON2_INCDIR` must contain the compiled shared library for your platform.
+`ARGON2_INCDIR` must contain the `argon2.h` header file, and `ARGON2_LIBDIR` must contain the compiled shared library for your platform.
 
 Or by using the provided Makefile (use the provided variables to point it to your Lua and argon2 installations):
 
@@ -80,6 +80,6 @@ Work licensed under the MIT License. Please check [P-H-C/phc-winner-argon2][Argo
 [luarocks-argon2]: http://luarocks.org/modules/thibaultcha/argon2
 [badge-travis-url]: https://travis-ci.org/thibaultCha/lua-argon2
 [badge-travis-image]: https://travis-ci.org/thibaultCha/lua-argon2.svg?branch=master
-[badge-version-image]: https://img.shields.io/badge/version-1.0.0-blue.svg?style=flat
+[badge-version-image]: https://img.shields.io/badge/version-1.0.1-blue.svg?style=flat
 [badge-coveralls-url]: https://coveralls.io/github/thibaultCha/lua-argon2?branch=master
 [badge-coveralls-image]: https://coveralls.io/repos/github/thibaultCha/lua-argon2/badge.svg?branch=master

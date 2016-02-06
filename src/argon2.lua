@@ -36,7 +36,7 @@ local opts = {
 }
 
 local _M = {
-  _VERSION = "1.0.0"
+  _VERSION = "1.0.1"
 }
 
 --- Encrypt a plain string.
