@@ -5,7 +5,7 @@ See the [Argon2 documentation](https://github.com/P-H-C/phc-winner-argon2) at
 the same time while you consult this binding's documentation.
 @module argon2
 @author thibaultcha
-@release 1.1.0
+@release 1.1.1
 */
 
 #include <lua.h>
