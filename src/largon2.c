@@ -10,7 +10,6 @@
 
 const uint32_t ENCODED_LEN = 108u;
 const uint32_t HASH_LEN = 32u;
-const uint32_t SALT_LEN = 16u;
 
 static const char *const type_opts[] = {"d", "i", NULL};
 static const enum Argon2_type types[] = {Argon2_d, Argon2_i};
