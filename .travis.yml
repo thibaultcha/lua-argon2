@@ -21,8 +21,8 @@ install:
   - luarocks make argon2-*.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage" ARGON2_INCDIR=$ARGON2_DIR/src ARGON2_LIBDIR=$ARGON2_DIR
   - make clean
 script:
-  - busted -v -o gtest --repeat 3 --coverage spec
+  - busted -v -o gtest --repeat 3 spec
 after_success:
-  - coveralls -i src --dump c.report.json
+  - coveralls -b . -r . -i ./src
 cache:
   pip: true
