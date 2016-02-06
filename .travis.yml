@@ -3,19 +3,19 @@ notifications:
   email: false
 env:
   global:
-    - LUAROCKS_VERSION=2.3.0
     - ARGON2_VERSION=20151206
     - ARGON2_DIR=$HOME/argon2
   matrix:
-    - LUA=lua5.1
-    - LUA=lua5.2
-    - LUA=lua5.3
-    - LUA=luajit-2.0
-    - LUA=luajit-2.1
+    - LUA="lua 5.1"
+    - LUA="lua 5.2"
+    - LUA="lua 5.3"
+    - LUA="luajit 2.0"
+    - LUA="luajit 2.1"
 before_install:
-  - source .ci/setenv_lua.sh
+  - pip install --user hererocks cpp-coveralls
+  - hererocks lua_install -r^ --$LUA
+  - export PATH=$PATH:$PWD/lua_install/bin
   - bash .ci/setup_argon2.sh
-  - pip install --user cpp-coveralls
   - luarocks install busted
   - luarocks install luacov-coveralls
 install:
@@ -24,7 +24,7 @@ install:
 script:
   - busted -v -o gtest --repeat 3 --coverage spec
 after_success:
-  - coveralls --dump c.report.json
-  - luacov-coveralls -i argon2 -j c.report.json
+  - coveralls -i src --dump c.report.json
+  - luacov-coveralls -i src -j c.report.json
 cache:
   pip: true
