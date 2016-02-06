@@ -16,13 +16,13 @@ $ luarocks install argon2 ARGON2_INCDIR="..." ARGON2_LIBDIR="..."
 
 `ARGON2_INCDIR` must contain the `argon2.h` header file, and `ARGON2_LIBDIR` must contain the compiled shared library for your platform.
 
-Or by using the provided Makefile (use the provided variables to point it to your Lua and argon2 installations):
+Or by using the Makefile (use the provided variables to point it to your Lua and argon2 installations):
 
 ```
 $ make
 ```
 
-Using the Makefile will compile `argon2.so` which must be placed somwhere in your `LUA_CPATH`.
+Using the Makefile will compile `argon2.so` which must be placed somewhere in your `LUA_CPATH`.
 
 ### Usage
 
