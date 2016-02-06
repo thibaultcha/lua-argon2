@@ -123,7 +123,7 @@ Argon2.
 @treturn string `error`: `nil` or a string describing the error if any.
 */
 static int verify(lua_State *L) {
-    lua_settop(L, 3);
+    lua_settop(L, 2);
 
     const char *plain, *encoded;
     argon2_type type = Argon2_i;
