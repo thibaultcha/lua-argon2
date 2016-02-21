@@ -2,7 +2,7 @@
 
 Lua binding for [Argon2]. Compatible with Lua 5.x and LuaJIT.
 
-> For LuaJIT or [ngx_lua]/[OpenResty] usage, consider [lua-argon2-ffi](https://github.com/thibaultCha/lua-argon2-ffi) for performance reasons.
+> For LuaJIT or [ngx_lua]/[OpenResty] usage, consider [lua-argon2-ffi](https://github.com/thibaultCha/lua-argon2-ffi).
 
 ### Prerequisites
 
