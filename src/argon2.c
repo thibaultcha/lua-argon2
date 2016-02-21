@@ -1,10 +1,13 @@
 /***
-Lua Argon2
-Lua binding for the Argon2 password hashing function.
+Pure Lua binding for the Argon2 password hashing function.
 See the [Argon2 documentation](https://github.com/P-H-C/phc-winner-argon2) at
 the same time while you consult this binding's documentation.
+
+Note: [lua-argon2-ffi](https://github.com/thibaultCha/lua-argon2-ffi) follows
+the same API as this binding, this documentation also applies to it.
+
 @module argon2
-@author thibaultcha
+@author Thibault Charbonnier
 @release 1.1.1
 */
 
@@ -20,8 +23,7 @@ the same time while you consult this binding's documentation.
 #endif
 
 /***
-Hashing options. When using `encrypt`, the third argument is a table describing
-the Argon2 options to use.
+Hashing options for `encrypt`. A table describing the Argon2 options to use.
 @field t_cost Number of iterations (`number`)
     type: number
     default: 2
@@ -62,7 +64,7 @@ Encrypt a plain string. Uses Argon2i (by default) or Argon2d to hash a password
 @param[type=string] pwd Password (or plain string) to hash.
 @param[type=string] salt Salt to use to hash pwd. Must not exceed 16 characters.
 @param[type=table] options Options with which to hash the plain string. See
-`options`.
+`options`. This parameter is optional.
 @treturn string `hash`: Hash computed by Argon2 or nil if an error occurred.
 @treturn string `error`: `nil` or a string describing the error if any.
 */

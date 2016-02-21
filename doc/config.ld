@@ -1,6 +1,7 @@
 project = "lua-argon2"
 title = "lua-argon2 documentation"
-description = "Lua binding for Argon2, a password hashing function that won the Password Hashing Competition."
+description = "Pure Lua binding for the Argon2 password hashing algorithm."
 format = "markdown"
 style = "!pale"
 kind_names={topic = "Manual"}
+examples = {"doc/examples"}
