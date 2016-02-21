@@ -1,6 +1,8 @@
 # lua-argon2 [![Module Version][badge-version-image]][luarocks-argon2] [![Build Status][badge-travis-image]][badge-travis-url] [![Coverage Status][badge-coveralls-image]][badge-coveralls-url]
 
-Lua binding for [Argon2]. Compatible with Lua 5.1, 5.2, 5.3, LuaJIT 2.0 and 2.1.
+Lua binding for [Argon2]. Compatible with Lua 5.x and LuaJIT.
+
+> For LuaJIT or [ngx_lua]/[OpenResty] usage, consider [lua-argon2-ffi](https://github.com/thibaultCha/lua-argon2-ffi) for performance reasons.
 
 ### Prerequisites
 
@@ -78,6 +80,10 @@ Work licensed under the MIT License. Please check [P-H-C/phc-winner-argon2][Argo
 
 [Argon2]: https://github.com/P-H-C/phc-winner-argon2
 [luarocks-argon2]: http://luarocks.org/modules/thibaultcha/argon2
+
+[ngx_lua]: https://github.com/openresty/lua-nginx-module
+[OpenResty]: https://openresty.org
+
 [badge-travis-url]: https://travis-ci.org/thibaultCha/lua-argon2
 [badge-travis-image]: https://travis-ci.org/thibaultCha/lua-argon2.svg?branch=master
 [badge-version-image]: https://img.shields.io/badge/version-1.1.1-blue.svg?style=flat

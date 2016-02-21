@@ -5,8 +5,8 @@ source = {
   tag = "1.1.1"
 }
 description = {
-  summary = "A binding for password hash Argon2, winner of PHC",
-  homepage = "https://github.com/P-H-C/phc-winner-argon2",
+  summary = "Pure Lua binding for the Argon2 password hashing algorithm",
+  homepage = "https://github.com/thibaultCha/lua-argon2",
   license = "MIT"
 }
 build = {
