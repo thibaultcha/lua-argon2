@@ -1,13 +1,10 @@
 /***
-Pure Lua binding for the Argon2 password hashing function.
+Pure Lua binding for the Argon2 password hashing algorithm.
 See the [Argon2 documentation](https://github.com/P-H-C/phc-winner-argon2) at
 the same time while you consult this binding's documentation.
-
-Note: [lua-argon2-ffi](https://github.com/thibaultCha/lua-argon2-ffi) follows
-the same API as this binding, this documentation also applies to it.
-
 @module argon2
 @author Thibault Charbonnier
+@license MIT
 @release 1.1.1
 */
 
@@ -18,19 +15,19 @@ the same API as this binding, this documentation also applies to it.
 #include <string.h>
 
 /***
-Hashing options for `encrypt`. A table describing the Argon2 options to use.
-@field t_cost Number of iterations (`number`)
-    type: number
-    default: 2
-@field m_cost Sets memory usage to m_cost kibibytes (`number`)
-    type: number
-    default: 12
-@field parallelism Number of threads and compute lanes (`number`)
-    type: number
-    default: 1
-@field argon2d If `true`, will use argon2d hashing (`boolean`)
-    type: boolean
-    default: false
+Argon2 hashing options. Those options can be given to `encrypt` as a table.
+If values are omitted, the default values will be used.
+Default values can be overriden with `m_cost`, `t_cost`, `parallelism` and
+`argon2d`.
+@field t_cost Number of iterations (`number`, default: `2`)
+    override: argon2.t_cost(4)
+@field m_cost Sets memory usage to m_cost kibibytes (`number`, default: `12`)
+    override: argon2.m_cost(4)
+@field parallelism Number of threads and compute lanes (`number`, default: `1`)
+    override: argon2.parallelism(2)
+@field argon2d If `true`, will use the Argon2d hashing function (`boolean`, default: `false`)
+    override: argon2.argon2d(true)
+              argon2.argon2d("on")
 @table options
 */
 #define DEFAULT_T_COST 2
@@ -164,15 +161,19 @@ static int largon2_cfg_argon2d(lua_State *L) {
 // BINDINGS
 
 /***
-Encrypt a plain string. Uses Argon2i (by default) or Argon2d to hash a password
-(or any plain string).
+Encrypt a plain string. Use Argon2i (by default) or Argon2d to hash a string.
 @function encrypt
-@param[type=string] pwd Password (or plain string) to hash.
-@param[type=string] salt Salt to use to hash pwd. Must not exceed 16 characters.
+@param[type=string] plain Plain string to encrypt.
+@param[type=string] salt Salt to use to hash pwd.
 @param[type=table] options Options with which to hash the plain string. See
-`options`. This parameter is optional.
+`options`. This parameter is optional, if values are omitted the default ones
+will be used.
 @treturn string `hash`: Hash computed by Argon2 or nil if an error occurred.
 @treturn string `error`: `nil` or a string describing the error if any.
+
+@usage
+local hash, err = argon2.encrypt("password", "somesalt")
+local hash, err = argon2.encrypt("password", "somesalt", {t_cost = 4})
 */
 static int largon2_encrypt(lua_State *L) {
     largon2_config *cfg = largon2_arg_init(L, 3);
@@ -245,6 +246,10 @@ Argon2.
 @param[type=string] plain Plain string to verify.
 @treturn boolean `ok`: `true` if the password matched, `false` otherwise.
 @treturn string `error`: `nil` or a string describing the error if any.
+
+@usage
+local ok, err = argon2.verify(argon2i_hash, "password")
+local ok, err = argon2.verify(argon2d_hash, "password")
 */
 static int largon2_verify(lua_State *L) {
     largon2_arg_init(L, 2);

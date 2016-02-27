@@ -51,6 +51,12 @@ local hash, err = argon2.encrypt("password", "somesalt", {
 })
 assert(err == nil)
 assert(hash == "$argon2i$m=24,t=4,p=2$c29tZXNhbHQ$8BtAMKSLKR3l66c3l40LKrg09NwLD7hJYfSqoLQyKEE")
+
+-- Default options
+argon2.t_cost(4)
+argon2.m_cost(24)
+argon2.parallelism(24)
+argon2.argon2d(true)
 ```
 
 Verify:
