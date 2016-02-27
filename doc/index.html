@@ -48,15 +48,13 @@
 <div id="content">
 
 <h1>Module <code>argon2</code></h1>
-<p>Pure Lua binding for the Argon2 password hashing function.</p>
+<p>Pure Lua binding for the Argon2 password hashing algorithm.</p>
 <p>See the <a href="https://github.com/P-H-C/phc-winner-argon2">Argon2 documentation</a> at
 the same time while you consult this binding's documentation.</p>
-
-<p>Note: <a href="https://github.com/thibaultCha/lua-argon2-ffi">lua-argon2-ffi</a> follows
-the same API as this binding, this documentation also applies to it.</p>
     <h3>Info:</h3>
     <ul>
         <li><strong>Release</strong>: 1.1.1</li>
+        <li><strong>License</strong>: MIT</li>
         <li><strong>Author</strong>: Thibault Charbonnier</li>
     </ul>
 
@@ -64,7 +62,7 @@ the same API as this binding, this documentation also applies to it.</p>
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#encrypt">encrypt (pwd, salt, options)</a></td>
+	<td class="name" nowrap><a href="#encrypt">encrypt (plain, salt, options)</a></td>
 	<td class="summary">Encrypt a plain string.</td>
 	</tr>
 	<tr>
@@ -76,7 +74,7 @@ the same API as this binding, this documentation also applies to it.</p>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#options">options</a></td>
-	<td class="summary">Hashing options for <a href="index.html#encrypt">encrypt</a>.</td>
+	<td class="summary">Argon2 hashing options.</td>
 	</tr>
 </table>
 
@@ -89,27 +87,27 @@ the same API as this binding, this documentation also applies to it.</p>
     <dl class="function">
     <dt>
     <a name = "encrypt"></a>
-    <strong>encrypt (pwd, salt, options)</strong>
+    <strong>encrypt (plain, salt, options)</strong>
     </dt>
     <dd>
-    Encrypt a plain string.  Uses Argon2i (by default) or Argon2d to hash a password
-(or any plain string).
+    Encrypt a plain string.  Use Argon2i (by default) or Argon2d to hash a string.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">pwd</span>
+        <li><span class="parameter">plain</span>
             <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-         Password (or plain string) to hash.
+         Plain string to encrypt.
         </li>
         <li><span class="parameter">salt</span>
             <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-         Salt to use to hash pwd. Must not exceed 16 characters.
+         Salt to use to hash pwd.
         </li>
         <li><span class="parameter">options</span>
             <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
          Options with which to hash the plain string. See
-<a href="index.html#options">options</a>. This parameter is optional.
+<a href="index.html#options">options</a>. This parameter is optional, if values are omitted the default ones
+will be used.
         </li>
     </ul>
 
@@ -125,6 +123,12 @@ the same API as this binding, this documentation also applies to it.</p>
 
 
 
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">
+<span class="keyword">local</span> hash, err = argon2.encrypt(<span class="string">"password"</span>, <span class="string">"somesalt"</span>)
+<span class="keyword">local</span> hash, err = argon2.encrypt(<span class="string">"password"</span>, <span class="string">"somesalt"</span>, {t_cost = <span class="number">4</span>})</pre>
+    </ul>
 
 </dd>
     <dt>
@@ -161,6 +165,12 @@ Argon2.
 
 
 
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">
+<span class="keyword">local</span> ok, err = argon2.verify(argon2i_hash, <span class="string">"password"</span>)
+<span class="keyword">local</span> ok, err = argon2.verify(argon2d_hash, <span class="string">"password"</span>)</pre>
+    </ul>
 
 </dd>
 </dl>
@@ -172,40 +182,40 @@ Argon2.
     <strong>options</strong>
     </dt>
     <dd>
-    Hashing options for <a href="index.html#encrypt">encrypt</a>.  A table describing the Argon2 options to use.
+    Argon2 hashing options.  Those options can be given to <a href="index.html#encrypt">encrypt</a> as a table.
+If values are omitted, the default values will be used.
+Default values can be overriden with <code>m_cost</code>, <code>t_cost</code>, <code>parallelism</code> and
+<code>argon2d</code>.
 
 
     <h3>Fields:</h3>
     <ul>
         <li><span class="parameter">t_cost</span>
 
-<p> Number of iterations (<code>number</code>)</p>
-<pre><code>type: number
-default: 2
+<p> Number of iterations (<code>number</code>, default: <code>2</code>)</p>
+<pre><code>override: argon2.t_cost(4)
 </code></pre>
 
         </li>
         <li><span class="parameter">m_cost</span>
 
-<p> Sets memory usage to m_cost kibibytes (<code>number</code>)</p>
-<pre><code>type: number
-default: 12
+<p> Sets memory usage to m_cost kibibytes (<code>number</code>, default: <code>12</code>)</p>
+<pre><code>override: argon2.m_cost(4)
 </code></pre>
 
         </li>
         <li><span class="parameter">parallelism</span>
 
-<p> Number of threads and compute lanes (<code>number</code>)</p>
-<pre><code>type: number
-default: 1
+<p> Number of threads and compute lanes (<code>number</code>, default: <code>1</code>)</p>
+<pre><code>override: argon2.parallelism(2)
 </code></pre>
 
         </li>
         <li><span class="parameter">argon2d</span>
 
-<p> If <code>true</code>, will use argon2d hashing (<code>boolean</code>)</p>
-<pre><code>type: boolean
-default: false
+<p> If <code>true</code>, will use the Argon2d hashing function (<code>boolean</code>, default: <code>false</code>)</p>
+<pre><code>override: argon2.argon2d(true)
+          argon2.argon2d("on")
 </code></pre>
 
         </li>
@@ -223,7 +233,7 @@ default: false
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2016-02-21 13:47:59 </i>
+<i style="float:right;">Last updated 2016-02-26 23:51:01 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
