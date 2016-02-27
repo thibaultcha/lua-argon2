@@ -92,6 +92,6 @@ Work licensed under the MIT License. Please check [P-H-C/phc-winner-argon2][Argo
 
 [badge-travis-url]: https://travis-ci.org/thibaultCha/lua-argon2
 [badge-travis-image]: https://travis-ci.org/thibaultCha/lua-argon2.svg?branch=master
-[badge-version-image]: https://img.shields.io/badge/version-1.1.1-blue.svg?style=flat
+[badge-version-image]: https://img.shields.io/badge/version-1.2.0-blue.svg?style=flat
 [badge-coveralls-url]: https://coveralls.io/github/thibaultCha/lua-argon2?branch=master
 [badge-coveralls-image]: https://coveralls.io/repos/github/thibaultCha/lua-argon2/badge.svg?branch=master
