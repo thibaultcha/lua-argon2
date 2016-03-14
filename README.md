@@ -43,7 +43,6 @@ Encrypt:
 
 ```lua
 local argon2 = require "argon2"
-
 --- Prototype
 -- local hash, err = argon2.encrypt(pwd, salt, opts)
 
@@ -74,17 +73,14 @@ Verify:
 
 ```lua
 local argon2 = require "argon2"
-
 --- Prototype
 -- local ok, err = argon2.decrypt(hash, plain)
 
 local hash = assert(argon2.encrypt("password", "somesalt"))
+-- hash: argon2i hash
 
-local ok = assert(argon2.verify(hash, "password"))
-
-local ok, err = argon2.verify(hash, "passworld")
-assert(ok == false)
-assert(err == "The password did not match.")
+assert(argon2.verify(hash, "password")) -- ok: true
+assert(argon2.verify(hash, "passworld")) -- error: The password did not match
 ```
 
 ### Documentation
