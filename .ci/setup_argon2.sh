@@ -8,4 +8,3 @@ pushd $ARGON2_DIR
   make
   make test
 popd
-
