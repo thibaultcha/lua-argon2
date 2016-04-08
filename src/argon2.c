@@ -47,25 +47,10 @@ typedef struct {
 
 // CONFIGURATION
 
-static int largon2_destroy_config(lua_State *L) {
-    largon2_config *cfg;
-
-    cfg = lua_touserdata(L, 1);
-    cfg = NULL;
-
-    return 0;
-}
-
 static void largon2_create_config(lua_State *L) {
     largon2_config *cfg;
 
     cfg = lua_newuserdata(L, sizeof(*cfg));
-
-    lua_newtable(L);
-    lua_pushcfunction(L, largon2_destroy_config);
-    lua_setfield(L, -2, "__gc");
-    lua_setmetatable(L, -2);
-
     cfg->t_cost = DEFAULT_T_COST;
     cfg->m_cost = DEFAULT_M_COST;
     cfg->parallelism = DEFAULT_PARALLELISM;
