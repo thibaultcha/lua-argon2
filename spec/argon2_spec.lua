@@ -2,7 +2,7 @@ local argon2 = require "argon2"
 
 describe("argon2", function()
   it("_VERSION field", function()
-    assert.equal("1.2.0", argon2._VERSION)
+    assert.equal("2.0.0", argon2._VERSION)
   end)
   it("_AUTHOR field", function()
     assert.equal("Thibault Charbonnier", argon2._AUTHOR)

@@ -5,7 +5,7 @@ the same time while you consult this binding's documentation.
 @module argon2
 @author Thibault Charbonnier
 @license MIT
-@release 1.2.0
+@release 2.0.0
 */
 
 #include <argon2.h>
@@ -306,7 +306,7 @@ int luaopen_argon2(lua_State *L) {
     largon2_create_config(L);
     luaL_setfuncs(L, largon2, 1);
 
-    lua_pushstring(L, "1.2.0");
+    lua_pushstring(L, "2.0.0");
     lua_setfield(L, -2, "_VERSION");
 
     lua_pushstring(L, "Thibault Charbonnier");

@@ -1,11 +1,11 @@
 package = "argon2"
-version = "1.2.0-0"
+version = "2.0.0-0"
 source = {
   url = "git://github.com/thibaultCha/lua-argon2",
-  tag = "1.2.0"
+  tag = "2.0.0"
 }
 description = {
-  summary = "Pure Lua binding for the Argon2 password hashing algorithm",
+  summary = "Lua C binding for the Argon2 password hashing algorithm",
   homepage = "https://github.com/thibaultCha/lua-argon2",
   license = "MIT"
 }
