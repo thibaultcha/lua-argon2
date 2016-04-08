@@ -56,7 +56,7 @@ describe("encrypt()", function()
   end)
   it("should return a hash", function()
     local hash = assert(argon2.encrypt("password", "somesalt"))
-    assert.equal("$argon2i$m=12,t=2,p=1$c29tZXNhbHQ$ltrjNRFqTXmsHj++TFGZxg+zSg8hSrrSJiViCRns1HM", hash)
+    assert.matches("$argon2i$v=19$m=12,t=2,p=1$", hash, nil, true)
   end)
   it("should hash with argon2d", function()
     local hash = assert(argon2.encrypt("password", "somesalt", {argon2d = true}))
@@ -142,10 +142,10 @@ describe("module settings", function()
     assert.equal(4, argon2.t_cost(4))
 
     local hash = assert(argon2.encrypt("password", "somesalt"))
-    assert.equal("$argon2i$m=12,t=4,p=1$c29tZXNhbHQ$MqR/dijhlwUxpBbn/OQthUlTeP7xTWkksfxDMmFTyo8", hash)
+    assert.matches("$argon2i$v=19$m=12,t=4,p=1$", hash, nil, true)
 
     hash = assert(argon2.encrypt("password", "somesalt", {t_cost = 2}))
-    assert.equal("$argon2i$m=12,t=2,p=1$c29tZXNhbHQ$ltrjNRFqTXmsHj++TFGZxg+zSg8hSrrSJiViCRns1HM", hash)
+    assert.matches("$argon2i$v=19$m=12,t=2,p=1$", hash, nil, true)
 
     finally(function()
       argon2.t_cost(2)
@@ -155,10 +155,10 @@ describe("module settings", function()
     assert.equal(24, argon2.m_cost(24))
 
     local hash = assert(argon2.encrypt("password", "somesalt"))
-    assert.equal("$argon2i$m=24,t=2,p=1$c29tZXNhbHQ$yU2I2AEwQ0KmHKOML+JQ+zlBWUKUcLkiacnz7gl+d+g", hash)
+    assert.matches("$argon2i$v=19$m=24,t=2,p=1$", hash, nil, true)
 
     hash = assert(argon2.encrypt("password", "somesalt", {m_cost = 12}))
-    assert.equal("$argon2i$m=12,t=2,p=1$c29tZXNhbHQ$ltrjNRFqTXmsHj++TFGZxg+zSg8hSrrSJiViCRns1HM", hash)
+    assert.matches("$argon2i$v=19$m=12,t=2,p=1$", hash, nil, true)
 
     finally(function()
       argon2.m_cost(12)
@@ -167,11 +167,11 @@ describe("module settings", function()
   it("should accept parallelism", function()
     assert.equal(2, argon2.parallelism(2))
 
-    local hash = assert(argon2.encrypt("password", "somesalt"))
-    assert.equal("$argon2i$m=12,t=2,p=2$c29tZXNhbHQ$JH4TagIUwH4IQpYzwU5o8jUntm1yOswsoCdgQCv9JNw", hash)
+    local hash = assert(argon2.encrypt("password", "somesalt", {m_cost = 24}))
+    assert.matches("$argon2i$v=19$m=24,t=2,p=2$", hash, nil, true)
 
     hash = assert(argon2.encrypt("password", "somesalt", {parallelism = 1}))
-    assert.equal("$argon2i$m=12,t=2,p=1$c29tZXNhbHQ$ltrjNRFqTXmsHj++TFGZxg+zSg8hSrrSJiViCRns1HM", hash)
+    assert.matches("$argon2i$v=19$m=12,t=2,p=1$", hash, nil, true)
 
     finally(function()
       argon2.parallelism(1)
@@ -184,10 +184,15 @@ describe("module settings", function()
     assert.equal(true, argon2.argon2d(true))
 
     local hash = assert(argon2.encrypt("password", "somesalt"))
-    assert.equal("$argon2d$m=12,t=2,p=1$c29tZXNhbHQ$mfklun4fYCbv2Hw0UnZZ56xAqWbjD+XRMSN9h6SfLe4", hash)
+    assert.matches("$argon2d$v=19$m=12,t=2,p=1$", hash, nil, true)
 
     hash = assert(argon2.encrypt("password", "somesalt", {argon2d = false}))
-    assert.equal("$argon2i$m=12,t=2,p=1$c29tZXNhbHQ$ltrjNRFqTXmsHj++TFGZxg+zSg8hSrrSJiViCRns1HM", hash)
+    assert.matches("$argon2i$v=19$m=12,t=2,p=1$", hash, nil, true)
+
+    assert.equal(false, argon2.argon2d(nil))
+    assert.has_error(function()
+      argon2.argon2d("unknown")
+    end, "bad argument #1 to 'argon2d' (invalid option 'unknown')")
   end)
 end)
 

@@ -3,7 +3,7 @@ notifications:
   email: false
 env:
   global:
-    - ARGON2_VERSION=20151206
+    - ARGON2_VERSION=20160406
     - ARGON2_DIR=$HOME/argon2
   matrix:
     - LUA="lua 5.1"
@@ -18,7 +18,7 @@ before_install:
   - export PATH=$PATH:$PWD/lua_install/bin
   - luarocks install busted
 install:
-  - luarocks make argon2-*.rockspec CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage" ARGON2_INCDIR=$ARGON2_DIR/src ARGON2_LIBDIR=$ARGON2_DIR
+  - luarocks make CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage" ARGON2_INCDIR=$ARGON2_DIR/include ARGON2_LIBDIR=$ARGON2_DIR
   - make clean
 script:
   - busted -v -o gtest --repeat 3 spec
