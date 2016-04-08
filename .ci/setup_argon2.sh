@@ -7,4 +7,5 @@ pushd $ARGON2_DIR
   git checkout $ARGON2_VERSION
   make
   make test
+  ln -s libargon2.so libargon2.so.0
 popd

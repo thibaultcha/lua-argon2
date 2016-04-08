@@ -152,6 +152,9 @@ static int largon2_cfg_argon2d(lua_State *L) {
             value = luaL_checkoption(L, 1, NULL, bool_options);
             lua_pushstring(L, bool_options[value]);
         }
+    } else {
+        value = 0;
+        lua_pushboolean(L, 0);
     }
 
     cfg->argon2_t = value ? Argon2_d : Argon2_i;

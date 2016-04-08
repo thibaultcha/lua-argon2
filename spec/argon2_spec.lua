@@ -188,6 +188,11 @@ describe("module settings", function()
 
     hash = assert(argon2.encrypt("password", "somesalt", {argon2d = false}))
     assert.matches("$argon2i$v=19$m=12,t=2,p=1$", hash, nil, true)
+
+    assert.equal(false, argon2.argon2d(nil))
+    assert.has_error(function()
+      argon2.argon2d("unknown")
+    end, "bad argument #1 to 'argon2d' (invalid option 'unknown')")
   end)
 end)
 
