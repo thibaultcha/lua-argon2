@@ -1,9 +1,11 @@
 sudo: false
+
 notifications:
   email: false
+
 env:
   global:
-    - ARGON2_VERSION=20160406
+    - ARGON2_VERSION=20161029
     - ARGON2_DIR=$HOME/argon2
   matrix:
     - LUA="lua 5.1"
@@ -11,18 +13,27 @@ env:
     - LUA="lua 5.3"
     - LUA="luajit 2.0"
     - LUA="luajit 2.1"
+    - LUA="lua 5.1"
+      ARGON2_VERSION=20160406
+    - LUA="lua 5.1"
+      ARGON2_VERSION=20160821
+
 before_install:
   - bash .ci/setup_argon2.sh
   - pip install --user hererocks cpp-coveralls
   - hererocks lua_install -r^ --$LUA
   - export PATH=$PATH:$PWD/lua_install/bin
   - luarocks install busted
+
 install:
   - luarocks make CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage" ARGON2_INCDIR=$ARGON2_DIR/include ARGON2_LIBDIR=$ARGON2_DIR
   - make clean
+
 script:
   - busted -v -o gtest --repeat 3 spec
+
 after_success:
   - coveralls -b . -r . -i ./src
+
 cache:
   pip: true

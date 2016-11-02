@@ -315,7 +315,7 @@ int luaopen_argon2(lua_State *L) {
     lua_pushstring(L, "MIT");
     lua_setfield(L, -2, "_LICENSE");
 
-    lua_pushstring(L, "https://github.com/thibaultCha/lua-argon2");
+    lua_pushstring(L, "https://github.com/thibaultcha/lua-argon2");
     lua_setfield(L, -2, "_URL");
 
     return 1;

@@ -11,7 +11,7 @@ describe("argon2", function()
     assert.equal("MIT", argon2._LICENSE)
   end)
   it("_URL field", function()
-    assert.equal("https://github.com/thibaultCha/lua-argon2", argon2._URL)
+    assert.equal("https://github.com/thibaultcha/lua-argon2", argon2._URL)
   end)
 end)
 
