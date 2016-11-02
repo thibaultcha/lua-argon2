@@ -19,7 +19,7 @@ Compatibility:
   [`20160406`](https://github.com/P-H-C/phc-winner-argon2/releases/tag/20160406)
   and later.
 
-See the [CI][badge-coveralls-url] builds for the status of the currently
+See the [CI builds][badge-coveralls-url] for the status of the currently
 supported versions.
 
 ### Install
