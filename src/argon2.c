@@ -1,5 +1,5 @@
 /***
-Pure Lua binding for the Argon2 password hashing algorithm.
+Lua C binding for the Argon2 password hashing algorithm.
 See the [Argon2 documentation](https://github.com/P-H-C/phc-winner-argon2) at
 the same time while you consult this binding's documentation.
 @module argon2

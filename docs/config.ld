@@ -4,4 +4,5 @@ description = "Lua C binding for the Argon2 password hashing algorithm"
 format = "markdown"
 style = "!pale"
 kind_names = {topic = "Manual"}
-examples = {"doc/examples"}
+examples = {"docs/examples"}
+dir = "docs"

@@ -35,11 +35,11 @@
 
 
 <h2>Modules</h2>
-<ul class="$(kind=='Topics' and '' or 'nowrap'">
+<ul class="nowrap">
   <li><strong>argon2</strong></li>
 </ul>
 <h2>Examples</h2>
-<ul class="$(kind=='Topics' and '' or 'nowrap'">
+<ul class="nowrap">
   <li><a href="examples/usage.lua.html">usage.lua</a></li>
 </ul>
 
@@ -48,7 +48,7 @@
 <div id="content">
 
 <h1>Module <code>argon2</code></h1>
-<p>Pure Lua binding for the Argon2 password hashing algorithm.</p>
+<p>Lua C binding for the Argon2 password hashing algorithm.</p>
 <p>See the <a href="https://github.com/P-H-C/phc-winner-argon2">Argon2 documentation</a> at
 the same time while you consult this binding's documentation.</p>
     <h3>Info:</h3>
@@ -96,15 +96,15 @@ the same time while you consult this binding's documentation.</p>
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">plain</span>
-            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          Plain string to encrypt.
         </li>
         <li><span class="parameter">salt</span>
-            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          Salt to use to hash pwd.
         </li>
         <li><span class="parameter">options</span>
-            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
          Options with which to hash the plain string. See
 <a href="index.html#options">options</a>. This parameter is optional, if values are omitted the default ones
 will be used.
@@ -114,19 +114,18 @@ will be used.
     <h3>Returns:</h3>
     <ol>
         <li>
-           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
         <code>hash</code>: Hash computed by Argon2 or nil if an error occurred.</li>
         <li>
-           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        <code>error</code>: <code>nil</code> or a string describing the error if any.</li>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        <a href="https://www.lua.org/manual/5.1/manual.html#pdf-error">error</a>: <code>nil</code> or a string describing the error if any.</li>
     </ol>
 
 
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example">
-<span class="keyword">local</span> hash, err = argon2.encrypt(<span class="string">"password"</span>, <span class="string">"somesalt"</span>)
+        <pre class="example"><span class="keyword">local</span> hash, err = argon2.encrypt(<span class="string">"password"</span>, <span class="string">"somesalt"</span>)
 <span class="keyword">local</span> hash, err = argon2.encrypt(<span class="string">"password"</span>, <span class="string">"somesalt"</span>, {t_cost = <span class="number">4</span>})</pre>
     </ul>
 
@@ -144,11 +143,11 @@ Argon2.
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">encrypted</span>
-            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          Hash to verify the plain string against.
         </li>
         <li><span class="parameter">plain</span>
-            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          Plain string to verify.
         </li>
     </ul>
@@ -159,16 +158,15 @@ Argon2.
            <span class="types"><span class="type">boolean</span></span>
         <code>ok</code>: <code>true</code> if the password matched, <code>false</code> otherwise.</li>
         <li>
-           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        <code>error</code>: <code>nil</code> or a string describing the error if any.</li>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        <a href="https://www.lua.org/manual/5.1/manual.html#pdf-error">error</a>: <code>nil</code> or a string describing the error if any.</li>
     </ol>
 
 
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example">
-<span class="keyword">local</span> ok, err = argon2.verify(argon2i_hash, <span class="string">"password"</span>)
+        <pre class="example"><span class="keyword">local</span> ok, err = argon2.verify(argon2i_hash, <span class="string">"password"</span>)
 <span class="keyword">local</span> ok, err = argon2.verify(argon2d_hash, <span class="string">"password"</span>)</pre>
     </ul>
 
@@ -233,8 +231,8 @@ default: <code>false</code>)</p>
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
-<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
-<i style="float:right;">Last updated 2016-04-07 20:36:45 </i>
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.5</a></i>
+<i style="float:right;">Last updated 2016-11-01 18:26:03 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

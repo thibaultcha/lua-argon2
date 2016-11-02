@@ -54,11 +54,11 @@ local argon2 = require "argon2"
 
 --- Argon2i
 local hash = assert(argon2.encrypt("password", "somesalt"))
--- hash: "$argon2i$m=12,t=2,p=1$c29tZXNhbHQ$ltrjNRFqTXmsHj++TFGZxg+zSg8hSrrSJiViCRns1HM"
+-- hash is "$argon2i$m=12,t=2,p=1$c29tZXNhbHQ$ltrjNRFqTXmsHj++TFGZxg+zSg8hSrrSJiViCRns1HM"
 
 --- Argon2d
 local hash = assert(argon2.encrypt("password", "somesalt", {argon2d = true}))
--- hash: "$argon2d$m=12,t=2,p=1$c29tZXNhbHQ$mfklun4fYCbv2Hw0UnZZ56xAqWbjD+XRMSN9h6SfLe4"
+-- hash is "$argon2d$m=12,t=2,p=1$c29tZXNhbHQ$mfklun4fYCbv2Hw0UnZZ56xAqWbjD+XRMSN9h6SfLe4"
 
 -- Hashing options
 local hash = assert(argon2.encrypt("password", "somesalt", {
@@ -66,7 +66,7 @@ local hash = assert(argon2.encrypt("password", "somesalt", {
   m_cost = 24,
   parallelism = 2
 }))
--- hash: "$argon2i$m=24,t=4,p=2$c29tZXNhbHQ$8BtAMKSLKR3l66c3l40LKrg09NwLD7hJYfSqoLQyKEE"
+-- hash is "$argon2i$m=24,t=4,p=2$c29tZXNhbHQ$8BtAMKSLKR3l66c3l40LKrg09NwLD7hJYfSqoLQyKEE"
 
 -- Changing the default options (those arguments are the current defaults)
 argon2.t_cost(4)

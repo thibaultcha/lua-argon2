@@ -37,4 +37,4 @@ format:
 	clang-format -style="{BasedOnStyle: llvm, IndentWidth: 4}" -i src/$(LIB_NAME).c
 
 doc:
-	ldoc -c doc/config.ld src
+	ldoc -c docs/config.ld src
