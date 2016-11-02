@@ -2,6 +2,11 @@
 Lua C binding for the Argon2 password hashing algorithm.
 See the [Argon2 documentation](https://github.com/P-H-C/phc-winner-argon2) at
 the same time while you consult this binding's documentation.
+
+Note: this document is also valid for [lua-argon2-ffi]
+(https://github.com/thibaultcha/lua-argon2-ffi) which uses the same prototype
+for its `encrypt` and `verify` functions.
+
 @module argon2
 @author Thibault Charbonnier
 @license MIT
@@ -19,16 +24,20 @@ Argon2 hashing options. Those options can be given to `encrypt` as a table.
 If values are omitted, the default values will be used.
 Default values can be overriden with `m_cost`, `t_cost`, `parallelism` and
 `argon2d`.
-@field t_cost Number of iterations (`number`, default: `2`)
-    override: argon2.t_cost(4)
-@field m_cost Sets memory usage to m_cost kibibytes (`number`, default: `12`)
-    override: argon2.m_cost(4)
-@field parallelism Number of threads and compute lanes (`number`, default: `1`)
-    override: argon2.parallelism(2)
+@field t_cost Number of iterations (`number`, default: `2`).
+Can be set to a new default in lua-argon2 (C binding only) by calling:
+    argon2.t_cost(4)
+@field m_cost Sets memory usage to m_cost kibibytes (`number`, default: `12`).
+Can be set to a new default in lua-argon2 (C binding only) by calling:
+    argon2.m_cost(4)
+@field parallelism Number of threads and compute lanes (`number`, default: `1`).
+Can be set to a new default in lua-argon2 (C binding only) by calling:
+    argon2.parallelism(2)
 @field argon2d If `true`, will use the Argon2d hashing function (`boolean`,
-default: `false`)
-    override: argon2.argon2d(true)
-              argon2.argon2d("on")
+default: `false`).
+Can be set to a new default in lua-argon2 (C binding only) by calling:
+    argon2.argon2d(true)
+    argon2.argon2d("on")
 @table options
 */
 #define DEFAULT_T_COST 2
