@@ -19,7 +19,7 @@ BUILD_LDFLAGS  = -L$(LUA_LIBDIR) -L$(ARGON2_LIBDIR) -llua -largon2
 all: $(LIB_NAME).so
 
 $(LIB_NAME).so: $(LIB_NAME).o
-	$(CC) $(LIBFLAG) -o $@ $(BUILD_LDFLAGS) $(SO_LDFLAGS)
+	$(CC) $(LIBFLAG) -o $@ $< $(BUILD_LDFLAGS) $(SO_LDFLAGS)
 
 $(LIB_NAME).o: src/$(LIB_NAME).c
 	$(CC) $(LUA_CFLAGS) -c $< -o $@ $(BUILD_CFLAGS)
