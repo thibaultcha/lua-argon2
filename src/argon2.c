@@ -94,7 +94,6 @@ largon2_arg_init(lua_State *L, int nargs)
     if (lua_gettop(L) > nargs) {
         luaL_error(L, "expecting no more than %d arguments, but got %d",
                    nargs, lua_gettop(L));
-        return NULL;
     }
 
     lua_settop(L, nargs);
