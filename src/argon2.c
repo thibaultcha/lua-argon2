@@ -91,11 +91,13 @@ largon2_fetch_config(lua_State *L)
 static largon2_config_t*
 largon2_arg_init(lua_State *L, int nargs)
 {
-    luaL_argcheck(L, lua_gettop(L) <= nargs, nargs + 1,
-                  "found too many arguments");
+    if (lua_gettop(L) > nargs) {
+        luaL_error(L, "expecting no more than %d arguments, but got %d",
+                   nargs, lua_gettop(L));
+        return NULL;
+    }
 
-    while (lua_gettop(L) < nargs)
-        lua_pushnil(L);
+    lua_settop(L, nargs);
 
     return largon2_fetch_config(L);
 }
@@ -305,7 +307,10 @@ largon2_verify(lua_State *L)
     size_t              plainlen;
     argon2_type         type;
 
-    largon2_arg_init(L, 2);
+    if (lua_gettop(L) != 2) {
+        return luaL_error(L, "expecting 2 arguments, but got %d",
+                          lua_gettop(L));
+    }
 
     encoded = luaL_checkstring(L, 1);
     plain   = luaL_checklstring(L, 2, &plainlen);
