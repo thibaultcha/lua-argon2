@@ -14,7 +14,7 @@ ARGON2_LIBDIR ?= $(PREFIX)/lib/
 BUILD_CFLAGS   = -I$(LUA_INCDIR) -I$(ARGON2_INCDIR)
 BUILD_LDFLAGS  = -L$(LUA_LIBDIR) -L$(ARGON2_LIBDIR) -llua -largon2
 
-.PHONY: all install test clean format doc $(LIB_NAME)
+.PHONY: all install test clean doc $(LIB_NAME)
 
 all: $(LIB_NAME).so
 
@@ -32,9 +32,6 @@ test:
 
 clean:
 	rm -f *.so *.o
-
-format:
-	clang-format -style="{BasedOnStyle: llvm, IndentWidth: 4}" -i src/$(LIB_NAME).c
 
 doc:
 	ldoc -c docs/config.ld src
