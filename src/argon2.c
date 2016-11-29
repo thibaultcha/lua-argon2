@@ -44,7 +44,6 @@ Can be set to a new default in lua-argon2 (C binding only) by calling:
 #define DEFAULT_M_COST 12
 #define DEFAULT_PARALLELISM 1
 
-static const uint32_t ENCODED_LEN = 108u;
 static const uint32_t HASH_LEN = 32u;
 
 typedef struct {
@@ -176,7 +175,6 @@ local hash, err = argon2.encrypt("password", "somesalt", {t_cost = 4})
 static int largon2_encrypt(lua_State *L) {
     largon2_config *cfg = largon2_arg_init(L, 3);
 
-    char encoded[ENCODED_LEN];
     int ret_code;
 
     const char *plain, *salt;
@@ -221,14 +219,19 @@ static int largon2_encrypt(lua_State *L) {
         lua_pop(L, 1);
     }
 
+    size_t encoded_len = argon2_encodedlen(t_cost, m_cost, parallelism, saltlen,
+                                           HASH_LEN, argon2_t);
+
+    char encoded[encoded_len];
+
     if (argon2_t == Argon2_i)
         ret_code =
             argon2i_hash_encoded(t_cost, m_cost, parallelism, plain, plainlen,
-                                 salt, saltlen, HASH_LEN, encoded, ENCODED_LEN);
+                                 salt, saltlen, HASH_LEN, encoded, encoded_len);
     else
         ret_code =
             argon2d_hash_encoded(t_cost, m_cost, parallelism, plain, plainlen,
-                                 salt, saltlen, HASH_LEN, encoded, ENCODED_LEN);
+                                 salt, saltlen, HASH_LEN, encoded, encoded_len);
 
     if (ret_code != ARGON2_OK) {
         const char *err_msg = argon2_error_message(ret_code);
