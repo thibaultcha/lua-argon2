@@ -162,6 +162,10 @@ describe("module settings", function()
     end, "bad argument #1 to 'argon2d' (invalid option 'idk')")
   end)
   it("should accept t_cost module setting", function()
+    finally(function()
+      argon2.t_cost(2)
+    end)
+
     assert.equal(4, argon2.t_cost(4))
 
     local encoded = assert(argon2.encrypt("password", "somesalt"))
@@ -169,12 +173,12 @@ describe("module settings", function()
 
     encoded = assert(argon2.encrypt("password", "somesalt", {t_cost = 2}))
     assert.matches("$argon2i$v=19$m=12,t=2,p=1$", encoded, nil, true)
-
-    finally(function()
-      argon2.t_cost(2)
-    end)
   end)
   it("should accept m_cost module setting", function()
+    finally(function()
+      argon2.m_cost(12)
+    end)
+
     assert.equal(24, argon2.m_cost(24))
 
     local encoded = assert(argon2.encrypt("password", "somesalt"))
@@ -182,12 +186,12 @@ describe("module settings", function()
 
     encoded = assert(argon2.encrypt("password", "somesalt", {m_cost = 12}))
     assert.matches("$argon2i$v=19$m=12,t=2,p=1$", encoded, nil, true)
-
-    finally(function()
-      argon2.m_cost(12)
-    end)
   end)
   it("should accept parallelism", function()
+    finally(function()
+      argon2.parallelism(1)
+    end)
+
     assert.equal(2, argon2.parallelism(2))
 
     local encoded = assert(argon2.encrypt("password", "somesalt", {m_cost = 24}))
@@ -195,10 +199,6 @@ describe("module settings", function()
 
     encoded = assert(argon2.encrypt("password", "somesalt", {parallelism = 1}))
     assert.matches("$argon2i$v=19$m=12,t=2,p=1$", encoded, nil, true)
-
-    finally(function()
-      argon2.parallelism(1)
-    end)
   end)
   it("should accept hash_len", function()
     finally(function()
