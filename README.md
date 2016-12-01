@@ -85,8 +85,14 @@ local argon2 = require "argon2"
 local hash = assert(argon2.encrypt("password", "somesalt"))
 -- hash: argon2i hash
 
-assert(argon2.verify(hash, "password")) -- ok: true
-assert(argon2.verify(hash, "passworld")) -- error: The password did not match
+local ok, err = argon2.verify(argon2i_hash, "password")
+if err then
+  error("could not verify: " .. err)
+end
+
+if not ok then
+  error("The password does not match the supplied hash")
+end
 ```
 
 ### Documentation
