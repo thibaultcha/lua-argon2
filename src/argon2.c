@@ -35,6 +35,8 @@ Can be set to a new default in lua-argon2 (C binding only) by calling:
 @field parallelism Number of threads and compute lanes (`number`, default: `1`).
 Can be set to a new default in lua-argon2 (C binding only) by calling:
     argon2.parallelism(2)
+@field hash_len Length of the hash output length (`number`, default: `32`).
+    argon2.hash_len(64)
 @field argon2d If `true`, will use the Argon2d hashing function (`boolean`,
 default: `false`).
 Can be set to a new default in lua-argon2 (C binding only) by calling:
@@ -45,9 +47,7 @@ Can be set to a new default in lua-argon2 (C binding only) by calling:
 #define DEFAULT_T_COST 2
 #define DEFAULT_M_COST 12
 #define DEFAULT_PARALLELISM 1
-
-
-static const uint32_t HASH_LEN = 32u;
+#define DEFAULT_HASH_LEN 32
 
 
 typedef struct largon2_config_s largon2_config_t;
@@ -55,6 +55,7 @@ struct largon2_config_s {
     uint32_t         m_cost;
     uint32_t         t_cost;
     uint32_t         parallelism;
+    uint32_t         hash_len;
     argon2_type      argon2_t;
 };
 
@@ -71,6 +72,7 @@ largon2_create_config(lua_State *L)
     cfg->t_cost      = DEFAULT_T_COST;
     cfg->m_cost      = DEFAULT_M_COST;
     cfg->parallelism = DEFAULT_PARALLELISM;
+    cfg->hash_len    = DEFAULT_HASH_LEN;
     cfg->argon2_t    = Argon2_i;
 }
 
@@ -161,6 +163,18 @@ largon2_cfg_parallelism(lua_State *L)
 
 
 static int
+largon2_cfg_hash_len(lua_State *L)
+{
+    largon2_config_t *cfg = largon2_arg_init(L, 1);
+
+    largon2_integer_opt(L, 1, 1, &cfg->hash_len, "hash_len");
+    lua_pushinteger(L, cfg->hash_len);
+
+    return 1;
+}
+
+
+static int
 largon2_cfg_argon2d(lua_State *L)
 {
     static const char *bool_options[] = { "off", "on", NULL };
@@ -217,6 +231,7 @@ largon2_encrypt(lua_State *L)
     size_t              encoded_len;
     uint32_t            t_cost;
     uint32_t            m_cost;
+    uint32_t            hash_len;
     uint32_t            parallelism;
     argon2_type         argon2_t;
 
@@ -228,6 +243,7 @@ largon2_encrypt(lua_State *L)
     t_cost      = cfg->t_cost;
     m_cost      = cfg->m_cost;
     parallelism = cfg->parallelism;
+    hash_len    = cfg->hash_len;
     argon2_t    = cfg->argon2_t;
 
     if (!lua_isnil(L, 3)) {
@@ -247,6 +263,10 @@ largon2_encrypt(lua_State *L)
         largon2_integer_opt(L, -1, 3, &parallelism, "parallelism");
         lua_pop(L, 1);
 
+        lua_getfield(L, 3, "hash_len");
+        largon2_integer_opt(L, -1, 3, &hash_len, "hash_len");
+        lua_pop(L, 1);
+
         lua_getfield(L, -1, "argon2d");
         if (!lua_isnil(L, -1) && lua_isboolean(L, -1)) {
             // reverse checking to allow overriding the module settings
@@ -257,19 +277,19 @@ largon2_encrypt(lua_State *L)
     }
 
     encoded_len = argon2_encodedlen(t_cost, m_cost, parallelism, saltlen,
-                                    HASH_LEN, argon2_t);
+                                    hash_len, argon2_t);
 
     char encoded[encoded_len];
 
     if (argon2_t == Argon2_i) {
         ret_code =
           argon2i_hash_encoded(t_cost, m_cost, parallelism, plain, plainlen,
-                               salt, saltlen, HASH_LEN, encoded, encoded_len);
+                               salt, saltlen, hash_len, encoded, encoded_len);
 
     } else {
         ret_code =
           argon2d_hash_encoded(t_cost, m_cost, parallelism, plain, plainlen,
-                               salt, saltlen, HASH_LEN, encoded, encoded_len);
+                               salt, saltlen, hash_len, encoded, encoded_len);
     }
 
     if (ret_code != ARGON2_OK) {
@@ -364,6 +384,7 @@ static const luaL_Reg largon2[] = { { "verify", largon2_verify },
                                     { "t_cost", largon2_cfg_t_cost },
                                     { "m_cost", largon2_cfg_m_cost },
                                     { "parallelism", largon2_cfg_parallelism },
+                                    { "hash_len", largon2_cfg_hash_len },
                                     { "argon2d", largon2_cfg_argon2d },
                                     { NULL, NULL } };
 

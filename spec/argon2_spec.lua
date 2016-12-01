@@ -74,6 +74,15 @@ describe("encrypt()", function()
     local hash = assert(argon2.encrypt("password", "somesalt", {parallelism = 2, m_cost = 24}))
     assert.matches("p=2", hash)
   end)
+  it("should accept hash_len", function()
+    local encoded_hash_default = assert(argon2.encrypt("password", "somesalt"))
+    assert.is_string(encoded_hash_default)
+
+    local encoded_hash_64 = assert(argon2.encrypt("password", "somesalt", {hash_len = 64}))
+    assert.is_string(encoded_hash_64)
+
+    assert.not_equal(encoded_hash_default, encoded_hash_64)
+  end)
   it("should accept all options", function()
     local hash = assert(argon2.encrypt("password", "somesalt", {
       t_cost = 4,
@@ -184,6 +193,19 @@ describe("module settings", function()
     finally(function()
       argon2.parallelism(1)
     end)
+  end)
+  it("should accept hash_len", function()
+    finally(function()
+      argon2.hash_len(32)
+    end)
+
+    local encoded_default_hash_len = assert(argon2.encrypt("password", "somesalt"))
+
+    assert.equal(64, argon2.hash_len(64))
+
+    local encoded_hash_len_64 = assert(argon2.encrypt("password", "somesalt"))
+
+    assert.not_equal(encoded_default_hash_len, encoded_hash_len_64)
   end)
   it("should accept argon2d", function()
     assert.equal("off", argon2.argon2d("off"))
