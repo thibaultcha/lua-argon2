@@ -13,6 +13,12 @@ describe("argon2", function()
   it("_URL field", function()
     assert.equal("https://github.com/thibaultcha/lua-argon2", argon2._URL)
   end)
+  it("variants field", function()
+    assert.is_table(argon2.variants)
+    assert.is_userdata(argon2.variants.argon2_i)
+    assert.is_userdata(argon2.variants.argon2_d)
+    assert.is_userdata(argon2.variants.argon2_id)
+  end)
 end)
 
 describe("encrypt()", function()
@@ -44,6 +50,10 @@ describe("encrypt()", function()
     assert.has_error(function()
       argon2.encrypt("", "", {}, "")
     end, "expecting no more than 3 arguments, but got 4")
+
+    assert.has_error(function()
+      argon2.encrypt("", "", { variant = "" })
+    end, "bad argument #3 to 'encrypt' (expected variant to be a number, got string)")
   end)
   it("salt too short", function()
     local encoded, err = argon2.encrypt("password", "")
@@ -58,32 +68,49 @@ describe("encrypt()", function()
     local encoded = assert(argon2.encrypt("password", "somesalt"))
     assert.matches("$argon2i$v=19$m=12,t=2,p=1$", encoded, nil, true)
   end)
-  it("should encoded with argon2d", function()
-    local encoded = assert(argon2.encrypt("password", "somesalt", {argon2d = true}))
+  it("should encode with argon2d", function()
+    local encoded = assert(argon2.encrypt("password", "somesalt", {
+      variant = argon2.variants.argon2_d
+    }))
     assert.matches("argon2d", encoded)
   end)
+  it("should encode with argon2_id", function()
+    local encoded = assert(argon2.encrypt("password", "somesalt", {
+      variant = argon2.variants.argon2_id
+    }))
+    assert.matches("argon2id", encoded)
+  end)
   it("should accept time cost", function()
-    local encoded = assert(argon2.encrypt("password", "somesalt", {t_cost = 4}))
+    local encoded = assert(argon2.encrypt("password", "somesalt", {
+      t_cost = 4
+    }))
     assert.matches("t=4", encoded)
   end)
   it("should accept memory cost", function()
-    local encoded = assert(argon2.encrypt("password", "somesalt", {m_cost = 13}))
+    local encoded = assert(argon2.encrypt("password", "somesalt", {
+      m_cost = 13
+    }))
     assert.matches("m=13", encoded)
   end)
   it("should accept parallelism", function()
-    local encoded = assert(argon2.encrypt("password", "somesalt", {parallelism = 2, m_cost = 24}))
+    local encoded = assert(argon2.encrypt("password", "somesalt", {
+      parallelism = 2,
+      m_cost = 24
+    }))
     assert.matches("p=2", encoded)
   end)
   it("should accept hash_len", function()
     local encoded_hash_default = assert(argon2.encrypt("password", "somesalt"))
     assert.is_string(encoded_hash_default)
 
-    local encoded_hash_64 = assert(argon2.encrypt("password", "somesalt", {hash_len = 64}))
+    local encoded_hash_64 = assert(argon2.encrypt("password", "somesalt", {
+      hash_len = 64
+    }))
     assert.is_string(encoded_hash_64)
 
     assert.not_equal(encoded_hash_default, encoded_hash_64)
   end)
-  it("should accept all options", function()
+  it("should accept several options at once", function()
     local encoded = assert(argon2.encrypt("password", "somesalt", {
       t_cost = 4,
       m_cost = 24,
@@ -126,11 +153,29 @@ describe("verify()", function()
     assert.is_nil(err)
   end)
   it("should verify argon2d ok", function()
-    local encoded = assert(argon2.encrypt("password", "somesalt", {argon2d = true}))
+    local encoded = assert(argon2.encrypt("password", "somesalt", {
+      variant = argon2.variants.argon2_d
+    }))
     assert(argon2.verify(encoded, "password"))
   end)
   it("should verify argon2d fail", function()
-    local encoded = assert(argon2.encrypt("password", "somesalt", {argon2d = true}))
+    local encoded = assert(argon2.encrypt("password", "somesalt", {
+      variant = argon2.variants.argon2_d
+    }))
+    local ok, err = argon2.verify(encoded, "passworld")
+    assert.False(ok)
+    assert.is_nil(err)
+  end)
+  it("should verify argon2id ok", function()
+    local encoded = assert(argon2.encrypt("password", "somesalt", {
+      variant = argon2.variants.argon2_id
+    }))
+    assert(argon2.verify(encoded, "password"))
+  end)
+  it("should verify argon2id fail", function()
+    local encoded = assert(argon2.encrypt("password", "somesalt", {
+      variant = argon2.variants.argon2_id
+    }))
     local ok, err = argon2.verify(encoded, "passworld")
     assert.False(ok)
     assert.is_nil(err)
@@ -154,12 +199,8 @@ describe("module settings", function()
     end, "bad argument #1 to 't_cost' (expected t_cost to be a number, got string)")
 
     assert.has_error(function()
-      argon2.argon2d(0)
-    end, "bad argument #1 to 'argon2d' (invalid option '0')")
-
-    assert.has_error(function()
-      argon2.argon2d "idk"
-    end, "bad argument #1 to 'argon2d' (invalid option 'idk')")
+      argon2.variant(nil)
+    end, "bad argument #1 to 'variant' (userdata expected, got nil)")
   end)
   it("should accept t_cost module setting", function()
     finally(function()
@@ -171,7 +212,9 @@ describe("module settings", function()
     local encoded = assert(argon2.encrypt("password", "somesalt"))
     assert.matches("$argon2i$v=19$m=12,t=4,p=1$", encoded, nil, true)
 
-    encoded = assert(argon2.encrypt("password", "somesalt", {t_cost = 2}))
+    encoded = assert(argon2.encrypt("password", "somesalt", {
+      t_cost = 2
+    }))
     assert.matches("$argon2i$v=19$m=12,t=2,p=1$", encoded, nil, true)
   end)
   it("should accept m_cost module setting", function()
@@ -184,23 +227,29 @@ describe("module settings", function()
     local encoded = assert(argon2.encrypt("password", "somesalt"))
     assert.matches("$argon2i$v=19$m=24,t=2,p=1$", encoded, nil, true)
 
-    encoded = assert(argon2.encrypt("password", "somesalt", {m_cost = 12}))
+    encoded = assert(argon2.encrypt("password", "somesalt", {
+      m_cost = 12
+    }))
     assert.matches("$argon2i$v=19$m=12,t=2,p=1$", encoded, nil, true)
   end)
-  it("should accept parallelism", function()
+  it("should accept parallelism module setting", function()
     finally(function()
       argon2.parallelism(1)
     end)
 
     assert.equal(2, argon2.parallelism(2))
 
-    local encoded = assert(argon2.encrypt("password", "somesalt", {m_cost = 24}))
+    local encoded = assert(argon2.encrypt("password", "somesalt", {
+      m_cost = 24
+    }))
     assert.matches("$argon2i$v=19$m=24,t=2,p=2$", encoded, nil, true)
 
-    encoded = assert(argon2.encrypt("password", "somesalt", {parallelism = 1}))
+    encoded = assert(argon2.encrypt("password", "somesalt", {
+      parallelism = 1
+    }))
     assert.matches("$argon2i$v=19$m=12,t=2,p=1$", encoded, nil, true)
   end)
-  it("should accept hash_len", function()
+  it("should accept hash_len module setting", function()
     finally(function()
       argon2.hash_len(32)
     end)
@@ -213,22 +262,21 @@ describe("module settings", function()
 
     assert.not_equal(encoded_default_hash_len, encoded_hash_len_64)
   end)
-  it("should accept argon2d", function()
-    assert.equal("off", argon2.argon2d("off"))
-    assert.equal("on", argon2.argon2d("on"))
-    assert.equal(false, argon2.argon2d(false))
-    assert.equal(true, argon2.argon2d(true))
+  it("should accept variant module setting", function()
+    finally(function()
+      argon2.variant(argon2.variants.argon2_i)
+    end)
+
+    local variant = argon2.variant(argon2.variants.argon2_d)
+    assert.equal(argon2.variants.argon2_d, variant)
 
     local encoded = assert(argon2.encrypt("password", "somesalt"))
     assert.matches("$argon2d$v=19$m=12,t=2,p=1$", encoded, nil, true)
 
-    encoded = assert(argon2.encrypt("password", "somesalt", {argon2d = false}))
+    encoded = assert(argon2.encrypt("password", "somesalt", {
+      variant = argon2.variants.argon2_i
+    }))
     assert.matches("$argon2i$v=19$m=12,t=2,p=1$", encoded, nil, true)
-
-    assert.equal(false, argon2.argon2d(nil))
-    assert.has_error(function()
-      argon2.argon2d("unknown")
-    end, "bad argument #1 to 'argon2d' (invalid option 'unknown')")
   end)
 end)
 
