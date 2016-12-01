@@ -220,20 +220,26 @@ will be used.
 
 @usage
 local hash, err = argon2.encrypt("password", "somesalt")
+if err then
+  error("could not encrypt: " .. err)
+end
+
+-- with options
 local hash, err = argon2.encrypt("password", "somesalt", {t_cost = 4})
 */
 static int
 largon2_encrypt(lua_State *L)
 {
-    int                 ret_code;
-    const char         *plain, *salt;
-    size_t              plainlen, saltlen;
-    size_t              encoded_len;
-    uint32_t            t_cost;
-    uint32_t            m_cost;
-    uint32_t            hash_len;
-    uint32_t            parallelism;
-    argon2_type         argon2_t;
+    const char             *plain, *salt;
+    size_t                  plainlen, saltlen;
+    size_t                  encoded_len;
+    uint32_t                t_cost;
+    uint32_t                m_cost;
+    uint32_t                hash_len;
+    uint32_t                parallelism;
+    argon2_type             argon2_t;
+    argon2_error_codes      ret_code;
+    char                    *err_msg;
 
     plain = luaL_checklstring(L, 1, &plainlen);
     salt  = luaL_checklstring(L, 2, &saltlen);
@@ -293,7 +299,7 @@ largon2_encrypt(lua_State *L)
     }
 
     if (ret_code != ARGON2_OK) {
-        const char *err_msg = argon2_error_message(ret_code);
+        err_msg = (char *) argon2_error_message(ret_code);
         lua_pushnil(L);
         lua_pushstring(L, err_msg);
         return 2;
@@ -312,19 +318,31 @@ Argon2.
 @function verify
 @param[type=string] encrypted Hash to verify the plain string against.
 @param[type=string] plain Plain string to verify.
-@treturn boolean `ok`: `true` if the password matched, `false` otherwise.
+@treturn boolean `ok`: `true` if the password matched, `false` if it is a
+mismatch. If an error occurs during decoding, will be `nil`.
 @treturn string `error`: `nil` or a string describing the error if any.
 
 @usage
 local ok, err = argon2.verify(argon2i_hash, "password")
+if err then
+  error("could not verify: " .. err)
+end
+
+if not ok then
+  error("The password does not match the supplied hash")
+end
+
+-- with a argon2d hash
 local ok, err = argon2.verify(argon2d_hash, "password")
 */
 static int
 largon2_verify(lua_State *L)
 {
-    const char         *plain, *encoded;
-    size_t              plainlen;
-    argon2_type         type;
+    const char             *plain, *encoded;
+    size_t                  plainlen;
+    argon2_type             type;
+    argon2_error_codes      ret_code;
+    char                   *err_msg;
 
     if (lua_gettop(L) != 2) {
         return luaL_error(L, "expecting 2 arguments, but got %d",
@@ -341,10 +359,16 @@ largon2_verify(lua_State *L)
         type = Argon2_i;
     }
 
-    argon2_error_codes result = argon2_verify(encoded, plain, plainlen, type);
-    if (result != ARGON2_OK) {
+    ret_code = argon2_verify(encoded, plain, plainlen, type);
+    if (ret_code == ARGON2_VERIFY_MISMATCH) {
         lua_pushboolean(L, 0);
-        lua_pushliteral(L, "The password did not match.");
+        return 1;
+    }
+
+    if (ret_code != ARGON2_OK) {
+        err_msg = (char *) argon2_error_message(ret_code);
+        lua_pushnil(L);
+        lua_pushstring(L, err_msg);
         return 2;
     }
 
