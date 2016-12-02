@@ -49,12 +49,13 @@
 
 <h1>Module <code>argon2</code></h1>
 <p>Lua C binding for the Argon2 password hashing algorithm.</p>
-<p>See the <a href="https://github.com/P-H-C/phc-winner-argon2">Argon2 documentation</a> at
-the same time while you consult this binding's documentation.</p>
+<p>See the <a href="https://github.com/P-H-C/phc-winner-argon2">Argon2 documentation</a> for
+in-depth instructions and details about Argon2.</p>
 
-<p>Note: this document is also valid for [lua-argon2-ffi]
-(https://github.com/thibaultcha/lua-argon2-ffi) which uses the same prototype
-for its <a href="index.html#encrypt">encrypt</a> and <a href="index.html#verify">verify</a> functions.</p>
+<p>Note: this document is also valid for the
+<a href="https://github.com/thibaultcha/lua-argon2-ffi">lua-argon2-ffi</a> module: an FFI
+implementation of this binding for LuaJIT which uses the same API as this
+original implementaiton.</p>
     <h3>Info:</h3>
     <ul>
         <li><strong>Release</strong>: 2.0.0</li>
@@ -67,15 +68,20 @@ for its <a href="index.html#encrypt">encrypt</a> and <a href="index.html#verify"
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#encrypt">encrypt (plain, salt, options)</a></td>
-	<td class="summary">Encrypt a plain string.</td>
+	<td class="summary">Hashes a password with Argon2i, Argon2d, or Argon2id, producing an encoded
+hash.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#verify">verify (encrypted, plain)</a></td>
-	<td class="summary">Verify a plain string against a hash.</td>
+	<td class="name" nowrap><a href="#verify">verify (encoded, password)</a></td>
+	<td class="summary">Verifies a password against an encoded string.</td>
 	</tr>
 </table>
 <h2><a href="#Tables">Tables</a></h2>
 <table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#variants">variants</a></td>
+	<td class="summary">Argon2 hashing variants.</td>
+	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#options">options</a></td>
 	<td class="summary">Argon2 hashing options.</td>
@@ -94,7 +100,8 @@ for its <a href="index.html#encrypt">encrypt</a> and <a href="index.html#verify"
     <strong>encrypt (plain, salt, options)</strong>
     </dt>
     <dd>
-    Encrypt a plain string.  Use Argon2i (by default) or Argon2d to hash a string.
+    Hashes a password with Argon2i, Argon2d, or Argon2id, producing an encoded
+hash.
 
 
     <h3>Parameters:</h3>
@@ -105,7 +112,7 @@ for its <a href="index.html#encrypt">encrypt</a> and <a href="index.html#verify"
         </li>
         <li><span class="parameter">salt</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-         Salt to use to hash pwd.
+         Salt to use to hash the plain string.
         </li>
         <li><span class="parameter">options</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
@@ -119,10 +126,11 @@ will be used.
     <ol>
         <li>
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        <code>hash</code>: Hash computed by Argon2 or nil if an error occurred.</li>
+        <code>encoded</code>: Encoded hAsh computed by Argon2, or <code>nil</code> if an
+error occurred.</li>
         <li>
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        <a href="https://www.lua.org/manual/5.1/manual.html#pdf-error">error</a>: <code>nil</code> or a string describing the error if any.</li>
+        <code>err</code>: <code>nil</code>, or a string describing the error if any.</li>
     </ol>
 
 
@@ -130,29 +138,35 @@ will be used.
     <h3>Usage:</h3>
     <ul>
         <pre class="example"><span class="keyword">local</span> hash, err = argon2.encrypt(<span class="string">"password"</span>, <span class="string">"somesalt"</span>)
-<span class="keyword">local</span> hash, err = argon2.encrypt(<span class="string">"password"</span>, <span class="string">"somesalt"</span>, {t_cost = <span class="number">4</span>})</pre>
+<span class="keyword">if</span> err <span class="keyword">then</span>
+  <span class="global">error</span>(<span class="string">"could not encrypt: "</span> .. err)
+<span class="keyword">end</span>
+
+<span class="comment">-- with options
+</span><span class="keyword">local</span> hash, err = argon2.encrypt(<span class="string">"password"</span>, <span class="string">"somesalt"</span>, {
+  t_cost = <span class="number">4</span>,
+  variant = argon2.variants.argon2_d
+})</pre>
     </ul>
 
 </dd>
     <dt>
     <a name = "verify"></a>
-    <strong>verify (encrypted, plain)</strong>
+    <strong>verify (encoded, password)</strong>
     </dt>
     <dd>
-    Verify a plain string against a hash.  Uses Argon2i or Argon2d to verify if a
-given password (or any plain string) verifies against a hash encrypted with
-Argon2.
+    Verifies a password against an encoded string.
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">encrypted</span>
+        <li><span class="parameter">encoded</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-         Hash to verify the plain string against.
+         Encoded string to verify the plain password against.
         </li>
-        <li><span class="parameter">plain</span>
+        <li><span class="parameter">password</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-         Plain string to verify.
+         Plain password to verify.
         </li>
     </ul>
 
@@ -160,10 +174,13 @@ Argon2.
     <ol>
         <li>
            <span class="types"><span class="type">boolean</span></span>
-        <code>ok</code>: <code>true</code> if the password matched, <code>false</code> otherwise.</li>
+        <code>ok</code>: <code>true</code> if the password matches, <code>false</code> if it is a
+mismatch. If an error occurs during the verification, will be <code>nil</code>.</li>
         <li>
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        <a href="https://www.lua.org/manual/5.1/manual.html#pdf-error">error</a>: <code>nil</code> or a string describing the error if any.</li>
+         <code>err</code>: <code>nil</code>, or a string describing the error if any. A
+password mismatch will not return an error, but will return <code>ok = false</code>
+instead.</li>
     </ol>
 
 
@@ -171,7 +188,18 @@ Argon2.
     <h3>Usage:</h3>
     <ul>
         <pre class="example"><span class="keyword">local</span> ok, err = argon2.verify(argon2i_hash, <span class="string">"password"</span>)
-<span class="keyword">local</span> ok, err = argon2.verify(argon2d_hash, <span class="string">"password"</span>)</pre>
+<span class="keyword">if</span> err <span class="keyword">then</span>
+  <span class="comment">-- failure to verify (*not* a password mismatch)
+</span>  <span class="global">error</span>(<span class="string">"could not verify: "</span> .. err)
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> <span class="keyword">not</span> ok <span class="keyword">then</span>
+  <span class="comment">-- password mismatch
+</span>  <span class="global">error</span>(<span class="string">"The password does not match the supplied hash"</span>)
+<span class="keyword">end</span>
+
+<span class="comment">-- with a argon2d hash
+</span><span class="keyword">local</span> ok, err = argon2.verify(argon2d_hash, <span class="string">"password"</span>)</pre>
     </ul>
 
 </dd>
@@ -180,49 +208,103 @@ Argon2.
 
     <dl class="function">
     <dt>
+    <a name = "variants"></a>
+    <strong>variants</strong>
+    </dt>
+    <dd>
+    Argon2 hashing variants.  Those fields are <code>userdatums</code>, read-only values that
+can be fed to the module's configuration or the <a href="index.html#encrypt">encrypt</a> function.
+See the <a href="https://github.com/P-H-C/phc-winner-argon2">Argon2 documentation</a>
+for a description of those variants.
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">argon2_i</span>
+
+
+
+        </li>
+        <li><span class="parameter">argon2_d</span>
+
+
+
+        </li>
+        <li><span class="parameter">argon2_id</span>
+
+
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
     <a name = "options"></a>
     <strong>options</strong>
     </dt>
     <dd>
     Argon2 hashing options.  Those options can be given to <a href="index.html#encrypt">encrypt</a> as a table.
-If values are omitted, the default values will be used.
-Default values can be overriden with <code>m_cost</code>, <code>t_cost</code>, <code>parallelism</code> and
-<code>argon2d</code>.
+If values are omitted, the default values of this module will be used.
+Default values of this module can be overriden with <code>m_cost()</code>, <code>t_cost()</code>,
+<code>parallelism()</code>, <code>hash_len()</code>, and <code>variant()</code>.
 
 
     <h3>Fields:</h3>
     <ul>
         <li><span class="parameter">t_cost</span>
 
-<p> Number of iterations (<code>number</code>, default: <code>2</code>).
-Can be set to a new default in lua-argon2 (C binding only) by calling:</p>
+<p> Number of iterations (<code>number</code>, default: <code>2</code>).</p>
+<pre><code>argon2.encrypt("password", "salt", { t_cost = 4 })
+</code></pre>
+<p>Can be set to a new default in lua-argon2 (C binding only) by calling:</p>
 <pre><code>argon2.t_cost(4)
 </code></pre>
 
         </li>
         <li><span class="parameter">m_cost</span>
 
-<p> Sets memory usage to m_cost kibibytes (<code>number</code>, default: <code>12</code>).
-Can be set to a new default in lua-argon2 (C binding only) by calling:</p>
-<pre><code>argon2.m_cost(4)
+<p> Sets memory usage to 2^N KiB (<code>number</code>, default: <code>12</code>).</p>
+<pre><code>argon2.encrypt("password", "salt", { m_cost = 16 })
+</code></pre>
+<p>Can be set to a new default in lua-argon2 (C binding only) by calling:</p>
+<pre><code>argon2.m_cost(16)
 </code></pre>
 
         </li>
         <li><span class="parameter">parallelism</span>
 
-<p> Number of threads and compute lanes (<code>number</code>, default: <code>1</code>).
-Can be set to a new default in lua-argon2 (C binding only) by calling:</p>
+<p> Number of threads and compute lanes (<code>number</code>, default: <code>1</code>).</p>
+<pre><code>argon2.encrypt("password", "salt", { parallelism = 2 })
+</code></pre>
+<p>Can be set to a new default in lua-argon2 (C binding only) by calling:</p>
 <pre><code>argon2.parallelism(2)
 </code></pre>
 
         </li>
-        <li><span class="parameter">argon2d</span>
+        <li><span class="parameter">hash_len</span>
 
-<p> If <code>true</code>, will use the Argon2d hashing function (<code>boolean</code>,
-default: <code>false</code>).
-Can be set to a new default in lua-argon2 (C binding only) by calling:</p>
-<pre><code>argon2.argon2d(true)
-argon2.argon2d("on")
+<p> Length of the hash output length (<code>number</code>, default: <code>32</code>).</p>
+<pre><code>argon2.encrypt("password", "salt", { hash_len = 64 })
+</code></pre>
+<p>Can be set to a new default in lua-argon2 (C binding only) by calling:</p>
+<pre><code>argon2.hash_len(64)
+</code></pre>
+
+        </li>
+        <li><span class="parameter">variant</span>
+
+<p> Choose the Argon2 variant to use (Argon2i, Argon2d, Argon2id)
+from the <a href="index.html#variants">variants</a> table. (<code>userdata</code>, default: <code>argon2.variants.argon2_i</code>).</p>
+<pre><code>argon2.encrypt("password", "salt", { variant = argon2.variants.argon2_d })
+</code></pre>
+<p>Can be set to a new default in lua-argon2 (C binding only) by calling:</p>
+<pre><code>argon2.variant(argon2.variants.argon2_i)
+argon2.variant(argon2.variants.argon2_d)
+argon2.variant(argon2.variants.argon2_id)
 </code></pre>
 
         </li>
@@ -239,8 +321,8 @@ argon2.argon2d("on")
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
-<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.5</a></i>
-<i style="float:right;">Last updated 2016-11-01 18:33:11 </i>
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2016-12-02 00:36:34 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

@@ -50,29 +50,37 @@ Encrypt:
 ```lua
 local argon2 = require "argon2"
 --- Prototype
--- local hash, err = argon2.encrypt(pwd, salt, opts)
+-- local encoded, err = argon2.encrypt(pwd, salt, opts)
 
 --- Argon2i
-local hash = assert(argon2.encrypt("password", "somesalt"))
--- hash is "$argon2i$m=12,t=2,p=1$c29tZXNhbHQ$ltrjNRFqTXmsHj++TFGZxg+zSg8hSrrSJiViCRns1HM"
+local encoded = assert(argon2.encrypt("password", "somesalt"))
+-- encoded is "$argon2i$m=12,t=2,p=1$c29tZXNhbHQ$ltrjNRFqTXmsHj++TFGZxg+zSg8hSrrSJiViCRns1HM"
 
 --- Argon2d
-local hash = assert(argon2.encrypt("password", "somesalt", {argon2d = true}))
--- hash is "$argon2d$m=12,t=2,p=1$c29tZXNhbHQ$mfklun4fYCbv2Hw0UnZZ56xAqWbjD+XRMSN9h6SfLe4"
+local encoded = assert(argon2.encrypt("password", "somesalt", {
+    variant = argon2.variants.argon2_d
+}))
+-- encoded is "$argon2d$m=12,t=2,p=1$c29tZXNhbHQ$mfklun4fYCbv2Hw0UnZZ56xAqWbjD+XRMSN9h6SfLe4"
+
+--- Argon2id
+local encoded = assert(argon2.encrypt("password", "somesalt", {
+    variant = argon2.variants.argon2_id
+}))
+-- encoded is "$argon2id$v=19$m=12,t=2,p=1$c29tZXNhbHQ$fJLcV2WII/sn+PjBK/b9YZfZFTNzU+21hyVt7xUWHDU"
 
 -- Hashing options
-local hash = assert(argon2.encrypt("password", "somesalt", {
+local encoded = assert(argon2.encrypt("password", "somesalt", {
   t_cost = 4,
-  m_cost = 24,
+  m_cost = 16,
   parallelism = 2
 }))
--- hash is "$argon2i$m=24,t=4,p=2$c29tZXNhbHQ$8BtAMKSLKR3l66c3l40LKrg09NwLD7hJYfSqoLQyKEE"
+-- encoded is "$argon2i$m=24,t=4,p=2$c29tZXNhbHQ$8BtAMKSLKR3l66c3l40LKrg09NwLD7hJYfSqoLQyKEE"
 
 -- Changing the default options (those arguments are the current defaults)
-argon2.t_cost(4)
-argon2.m_cost(24)
-argon2.parallelism(24)
-argon2.argon2d(true)
+argon2.t_cost(2)
+argon2.m_cost(12)
+argon2.parallelism(1)
+argon2.variant(argon2.variants.argon2_i)
 ```
 
 Verify:
@@ -82,10 +90,10 @@ local argon2 = require "argon2"
 --- Prototype
 -- local ok, err = argon2.decrypt(hash, plain)
 
-local hash = assert(argon2.encrypt("password", "somesalt"))
--- hash: argon2i hash
+local encoded = assert(argon2.encrypt("password", "somesalt"))
+-- encoded: argon2i encoded hash
 
-local ok, err = argon2.verify(argon2i_hash, "password")
+local ok, err = argon2.verify(encoded, "password")
 if err then
   error("could not verify: " .. err)
 end
