@@ -56,7 +56,7 @@ struct largon2_config_s {
     uint32_t         t_cost;
     uint32_t         parallelism;
     uint32_t         hash_len;
-    argon2_type      argon2_t;
+    argon2_type      variant;
 };
 
 
@@ -73,7 +73,7 @@ largon2_create_config(lua_State *L)
     cfg->m_cost      = DEFAULT_M_COST;
     cfg->parallelism = DEFAULT_PARALLELISM;
     cfg->hash_len    = DEFAULT_HASH_LEN;
-    cfg->argon2_t    = Argon2_i;
+    cfg->variant     = Argon2_i;
 }
 
 
@@ -117,9 +117,9 @@ largon2_integer_opt(lua_State *L, uint32_t optidx, uint32_t argidx,
             *property = value;
 
         } else {
-            const char *type = luaL_typename(L, optidx);
             snprintf(errmsg, sizeof(errmsg),
-                     "expected %s to be a number, got %s", key, type);
+                     "expected %s to be a number, got %s",
+                     key, luaL_typename(L, optidx));
             luaL_argerror(L, argidx, errmsg);
         }
     }
@@ -175,30 +175,13 @@ largon2_cfg_hash_len(lua_State *L)
 
 
 static int
-largon2_cfg_argon2d(lua_State *L)
+largon2_cfg_variant(lua_State *L)
 {
-    static const char *bool_options[] = { "off", "on", NULL };
-
-    int value;
-
     largon2_config_t *cfg = largon2_arg_init(L, 1);
 
-    if (!lua_isnil(L, 1)) {
-        if (lua_isboolean(L, 1)) {
-            value = lua_toboolean(L, 1);
-            lua_pushboolean(L, value);
+    luaL_checktype(L, 1, LUA_TLIGHTUSERDATA);
 
-        } else {
-            value = luaL_checkoption(L, 1, NULL, bool_options);
-            lua_pushstring(L, bool_options[value]);
-        }
-
-    } else {
-        value = 0;
-        lua_pushboolean(L, 0);
-    }
-
-    cfg->argon2_t = value ? Argon2_d : Argon2_i;
+    cfg->variant = (argon2_type) lua_touserdata(L, 1);
 
     return 1;
 }
@@ -237,7 +220,7 @@ largon2_encrypt(lua_State *L)
     uint32_t                m_cost;
     uint32_t                hash_len;
     uint32_t                parallelism;
-    argon2_type             argon2_t;
+    argon2_type             variant;
     argon2_error_codes      ret_code;
     char                    *err_msg;
 
@@ -250,7 +233,7 @@ largon2_encrypt(lua_State *L)
     m_cost      = cfg->m_cost;
     parallelism = cfg->parallelism;
     hash_len    = cfg->hash_len;
-    argon2_t    = cfg->argon2_t;
+    variant     = cfg->variant;
 
     if (!lua_isnil(L, 3)) {
         if (!lua_istable(L, 3)) {
@@ -273,28 +256,40 @@ largon2_encrypt(lua_State *L)
         largon2_integer_opt(L, -1, 3, &hash_len, "hash_len");
         lua_pop(L, 1);
 
-        lua_getfield(L, -1, "argon2d");
-        if (!lua_isnil(L, -1) && lua_isboolean(L, -1)) {
-            // reverse checking to allow overriding the module settings
-            argon2_t = lua_toboolean(L, -1) ? Argon2_d : Argon2_i;
+        lua_getfield(L, 3, "variant");
+        if (!lua_isnil(L, -1)) {
+            if (!lua_islightuserdata(L, -1)) {
+                char errmsg[64];
+                snprintf(errmsg, sizeof(errmsg),
+                         "expected variant to be a number, got %s",
+                         luaL_typename(L, -1));
+                luaL_argerror(L, 3, errmsg);
+            }
+
+            variant = (argon2_type) lua_touserdata(L, -1);
         }
 
         lua_pop(L, 1);
     }
 
     encoded_len = argon2_encodedlen(t_cost, m_cost, parallelism, saltlen,
-                                    hash_len, argon2_t);
+                                    hash_len, variant);
 
     char encoded[encoded_len];
 
-    if (argon2_t == Argon2_i) {
+    if (variant == Argon2_d) {
         ret_code =
-          argon2i_hash_encoded(t_cost, m_cost, parallelism, plain, plainlen,
+          argon2d_hash_encoded(t_cost, m_cost, parallelism, plain, plainlen,
                                salt, saltlen, hash_len, encoded, encoded_len);
+
+    } else if (variant == Argon2_id) {
+        ret_code =
+          argon2id_hash_encoded(t_cost, m_cost, parallelism, plain, plainlen,
+                                salt, saltlen, hash_len, encoded, encoded_len);
 
     } else {
         ret_code =
-          argon2d_hash_encoded(t_cost, m_cost, parallelism, plain, plainlen,
+          argon2i_hash_encoded(t_cost, m_cost, parallelism, plain, plainlen,
                                salt, saltlen, hash_len, encoded, encoded_len);
     }
 
@@ -340,7 +335,7 @@ largon2_verify(lua_State *L)
 {
     const char             *plain, *encoded;
     size_t                  plainlen;
-    argon2_type             type;
+    argon2_type             variant;
     argon2_error_codes      ret_code;
     char                   *err_msg;
 
@@ -353,13 +348,16 @@ largon2_verify(lua_State *L)
     plain   = luaL_checklstring(L, 2, &plainlen);
 
     if (strstr(encoded, "argon2d")) {
-        type = Argon2_d;
+        variant = Argon2_d;
+
+    } else if (strstr(encoded, "argon2id")) {
+        variant = Argon2_id;
 
     } else {
-        type = Argon2_i;
+        variant = Argon2_i;
     }
 
-    ret_code = argon2_verify(encoded, plain, plainlen, type);
+    ret_code = argon2_verify(encoded, plain, plainlen, variant);
     if (ret_code == ARGON2_VERIFY_MISMATCH) {
         lua_pushboolean(L, 0);
         return 1;
@@ -379,6 +377,24 @@ largon2_verify(lua_State *L)
 
 
 // MODULE
+
+
+static void
+largon2_push_argon2_variants_table(lua_State *L)
+{
+    lua_newtable(L);
+
+    lua_pushlightuserdata(L, (void *) Argon2_i);
+    lua_setfield(L, -2, "argon2_i");
+
+    lua_pushlightuserdata(L, (void *) Argon2_d);
+    lua_setfield(L, -2, "argon2_d");
+
+    lua_pushlightuserdata(L, (void *) Argon2_id);
+    lua_setfield(L, -2, "argon2_id");
+
+    return;
+}
 
 
 #if !defined(LUA_VERSION_NUM) || LUA_VERSION_NUM < 502
@@ -409,7 +425,7 @@ static const luaL_Reg largon2[] = { { "verify", largon2_verify },
                                     { "m_cost", largon2_cfg_m_cost },
                                     { "parallelism", largon2_cfg_parallelism },
                                     { "hash_len", largon2_cfg_hash_len },
-                                    { "argon2d", largon2_cfg_argon2d },
+                                    { "variant", largon2_cfg_variant },
                                     { NULL, NULL } };
 
 
@@ -420,6 +436,11 @@ luaopen_argon2(lua_State *L)
 
     largon2_create_config(L);
     luaL_setfuncs(L, largon2, 1);
+
+    // push argon2.types table
+
+    largon2_push_argon2_variants_table(L);
+    lua_setfield(L, -2, "variants");
 
     lua_pushstring(L, "2.0.0");
     lua_setfield(L, -2, "_VERSION");
