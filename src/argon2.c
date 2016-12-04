@@ -80,7 +80,7 @@ struct largon2_config_s {
 };
 
 
-// CONFIGURATION
+/* CONFIGURATION */
 
 
 static void
@@ -207,7 +207,7 @@ largon2_cfg_variant(lua_State *L)
 }
 
 
-// BINDINGS
+/* BINDINGS */
 
 
 /***
@@ -403,7 +403,7 @@ largon2_verify(lua_State *L)
 }
 
 
-// MODULE
+/* MODULE */
 
 
 static void
@@ -464,7 +464,7 @@ luaopen_argon2(lua_State *L)
     largon2_create_config(L);
     luaL_setfuncs(L, largon2, 1);
 
-    // push argon2.variants table
+    /* push argon2.variants table */
 
     largon2_push_argon2_variants_table(L);
     lua_setfield(L, -2, "variants");
