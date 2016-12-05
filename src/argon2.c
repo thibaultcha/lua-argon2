@@ -250,6 +250,7 @@ largon2_encrypt(lua_State *L)
     argon2_type             variant;
     argon2_error_codes      ret_code;
     largon2_config_t       *cfg;
+    luaL_Buffer             buf;
 
     plain = luaL_checklstring(L, 1, &plainlen);
     salt  = luaL_checklstring(L, 2, &saltlen);
@@ -302,10 +303,8 @@ largon2_encrypt(lua_State *L)
     encoded_len = argon2_encodedlen(t_cost, m_cost, parallelism, saltlen,
                                     hash_len, variant);
 
-    encoded = (char *) malloc(encoded_len * sizeof(char));
-    if (encoded == NULL) {
-        luaL_error(L, "could not allocate memory for encoded buffer");
-    }
+    luaL_buffinit(L, &buf);
+    encoded = luaL_prepbuffer(&buf);
 
     if (variant == Argon2_d) {
         ret_code =
@@ -323,16 +322,15 @@ largon2_encrypt(lua_State *L)
                                salt, saltlen, hash_len, encoded, encoded_len);
     }
 
+    luaL_addsize(&buf, encoded_len);
+    luaL_pushresult(&buf);
+
     if (ret_code != ARGON2_OK) {
-        free(encoded);
         err_msg = (char *) argon2_error_message(ret_code);
         lua_pushnil(L);
         lua_pushstring(L, err_msg);
         return 2;
     }
-
-    lua_pushstring(L, encoded);
-    free(encoded);
 
     return 1;
 }
