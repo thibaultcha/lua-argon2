@@ -15,11 +15,12 @@ original implementaiton.
 */
 
 
+#include <stdlib.h>
+#include <string.h>
 #include <argon2.h>
 #include <lauxlib.h>
 #include <lua.h>
 #include <lualib.h>
-#include <string.h>
 
 
 /***
@@ -239,6 +240,7 @@ static int
 largon2_encrypt(lua_State *L)
 {
     const char             *plain, *salt;
+    char                   *encoded, *err_msg;
     size_t                  plainlen, saltlen;
     size_t                  encoded_len;
     uint32_t                t_cost;
@@ -247,12 +249,12 @@ largon2_encrypt(lua_State *L)
     uint32_t                parallelism;
     argon2_type             variant;
     argon2_error_codes      ret_code;
-    char                    *err_msg;
+    largon2_config_t       *cfg;
 
     plain = luaL_checklstring(L, 1, &plainlen);
     salt  = luaL_checklstring(L, 2, &saltlen);
 
-    largon2_config_t *cfg = largon2_arg_init(L, 3);
+    cfg = largon2_arg_init(L, 3);
 
     t_cost      = cfg->t_cost;
     m_cost      = cfg->m_cost;
@@ -300,7 +302,10 @@ largon2_encrypt(lua_State *L)
     encoded_len = argon2_encodedlen(t_cost, m_cost, parallelism, saltlen,
                                     hash_len, variant);
 
-    char encoded[encoded_len];
+    encoded = (char *) malloc(encoded_len * sizeof(char));
+    if (encoded == NULL) {
+        luaL_error(L, "could not allocate memory for encoded buffer");
+    }
 
     if (variant == Argon2_d) {
         ret_code =
@@ -319,6 +324,7 @@ largon2_encrypt(lua_State *L)
     }
 
     if (ret_code != ARGON2_OK) {
+        free(encoded);
         err_msg = (char *) argon2_error_message(ret_code);
         lua_pushnil(L);
         lua_pushstring(L, err_msg);
@@ -326,6 +332,7 @@ largon2_encrypt(lua_State *L)
     }
 
     lua_pushstring(L, encoded);
+    free(encoded);
 
     return 1;
 }
