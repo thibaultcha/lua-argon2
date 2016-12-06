@@ -1,7 +1,12 @@
 /***
-Lua C binding for the Argon2 password hashing algorithm.
+Lua C binding for the Argon2 password hashing function. Compatible with Lua
+5.x and LuaJIT.
 See the [Argon2 documentation](https://github.com/P-H-C/phc-winner-argon2) for
 in-depth instructions and details about Argon2.
+
+This module's version is compatible with Argon2
+[20161029](https://github.com/P-H-C/phc-winner-argon2/releases/tag/20161029)
+and later.
 
 Note: this document is also valid for the
 [lua-argon2-ffi](https://github.com/thibaultcha/lua-argon2-ffi) module: an FFI

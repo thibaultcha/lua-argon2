@@ -4,30 +4,41 @@
 [![Build Status][badge-travis-image]][badge-travis-url]
 [![Coverage Status][badge-coveralls-image]][badge-coveralls-url]
 
-Lua binding for [Argon2]. Compatible with Lua 5.x and LuaJIT.
+Lua C binding for the [Argon2] password hashing function. Compatible with
+Lua 5.x and LuaJIT.
 
 > For LuaJIT or [ngx_lua]/[OpenResty] usage, consider the FFI implementation
 > if this binding:
 > [lua-argon2-ffi](https://github.com/thibaultcha/lua-argon2-ffi).
 
-### Prerequisites
+### Table of Contents
+
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Documentation](#documentation)
+- [Example](#example)
+- [License](#license)
+
+### Requirements
 
 The [Argon2] shared library must be compiled and available in your system.
 
 Compatibility:
 - Version `1.x` of this module is compatible with Argon2
-  [`20151206`](https://github.com/P-H-C/phc-winner-argon2/releases/tag/20151206)
+  [`20151206`](https://github.com/P-H-C/phc-winner-argon2/releases/tag/20151206).
 - Version `2.x` of this module is compatible with Argon2
   [`20160406`](https://github.com/P-H-C/phc-winner-argon2/releases/tag/20160406)
-  to [`20161029`](https://github.com/P-H-C/phc-winner-argon2/releases/tag/20161029)
+  to [`20161029`](https://github.com/P-H-C/phc-winner-argon2/releases/tag/20161029).
 - Version `3.x` of this module is compatible with Argon2
   [`20161029`](https://github.com/P-H-C/phc-winner-argon2/releases/tag/20161029)
-  and later
+  and later.
 
 See the [CI builds][badge-coveralls-url] for the status of the currently
 supported versions.
 
-### Install
+[Back to TOC](#table-of-contents)
+
+### Installation
 
 This binding can be installed via [Luarocks](https://luarocks.org):
 
@@ -48,9 +59,21 @@ $ make
 Using the Makefile will compile `argon2.so` which must be placed somewhere in
 your `LUA_CPATH`.
 
-### Usage
+[Back to TOC](#table-of-contents)
 
-Encrypt:
+### Documentation
+
+This binding's documentation is available at
+<http://thibaultcha.github.io/lua-argon2/>.
+
+The Argon2 password hashing function documentation is available at
+<https://github.com/P-H-C/phc-winner-argon2>.
+
+[Back to TOC](#table-of-contents)
+
+### Example
+
+Hash a password:
 
 ```lua
 local argon2 = require "argon2"
@@ -88,7 +111,7 @@ argon2.parallelism(1)
 argon2.variant(argon2.variants.argon2_i)
 ```
 
-Verify:
+Verify a password:
 
 ```lua
 local argon2 = require "argon2"
@@ -108,16 +131,15 @@ if not ok then
 end
 ```
 
-### Documentation
-
-The full documentation is available
-[online](http://thibaultcha.github.io/lua-argon2/).
+[Back to TOC](#table-of-contents)
 
 ### License
 
 Work licensed under the MIT License. Please check
-[P-H-C/phc-winner-argon2][Argon2] for license over Argon2 and the reference
+[P-H-C/phc-winner-argon2][Argon2] for the license over Argon2 and the reference
 implementation.
+
+[Back to TOC](#table-of-contents)
 
 [Argon2]: https://github.com/P-H-C/phc-winner-argon2
 [luarocks-argon2]: http://luarocks.org/modules/thibaultcha/argon2
