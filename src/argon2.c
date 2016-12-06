@@ -29,7 +29,7 @@ original implementaiton.
 
 /***
 Argon2 hashing variants. Those fields are `userdatums`, read-only values that
-can be fed to the module's configuration or the `encrypt` function.
+can be fed to the module's configuration or the `hash_encoded` function.
 See the [Argon2 documentation](https://github.com/P-H-C/phc-winner-argon2)
 for a description of those variants.
 @field argon2_i
@@ -40,31 +40,31 @@ for a description of those variants.
 
 
 /***
-Argon2 hashing options. Those options can be given to `encrypt` as a table.
+Argon2 hashing options. Those options can be given to `hash_encoded` as a table.
 If values are omitted, the default values of this module will be used.
 Default values of this module can be overriden with `m_cost()`, `t_cost()`,
 `parallelism()`, `hash_len()`, and `variant()`.
 @field t_cost Number of iterations (`number`, default: `3`).
-    argon2.encrypt("password", "salt", { t_cost = 4 })
+    argon2.hash_encoded("password", "salt", { t_cost = 4 })
 Can be set to a new default in lua-argon2 (C binding only) by calling:
     argon2.t_cost(4)
 @field m_cost Sets memory usage as KiB (`number`, default: `4096`).
-    argon2.encrypt("password", "salt", {
+    argon2.hash_encoded("password", "salt", {
       m_cost = math.pow(2, 16) -- 2^16 aka 65536 KiB
     })
 Can be set to a new default in lua-argon2 (C binding only) by calling:
     argon2.m_cost(16)
 @field parallelism Number of threads and compute lanes (`number`, default: `1`).
-    argon2.encrypt("password", "salt", { parallelism = 2 })
+    argon2.hash_encoded("password", "salt", { parallelism = 2 })
 Can be set to a new default in lua-argon2 (C binding only) by calling:
     argon2.parallelism(2)
 @field hash_len Length of the hash output length (`number`, default: `32`).
-    argon2.encrypt("password", "salt", { hash_len = 64 })
+    argon2.hash_encoded("password", "salt", { hash_len = 64 })
 Can be set to a new default in lua-argon2 (C binding only) by calling:
     argon2.hash_len(64)
 @field variant Choose the Argon2 variant to use (Argon2i, Argon2d, Argon2id)
 from the `variants` table. (`userdata`, default: `argon2.variants.argon2_i`).
-    argon2.encrypt("password", "salt", { variant = argon2.variants.argon2_d })
+    argon2.hash_encoded("password", "salt", { variant = argon2.variants.argon2_d })
 Can be set to a new default in lua-argon2 (C binding only) by calling:
     argon2.variant(argon2.variants.argon2_i)
     argon2.variant(argon2.variants.argon2_d)
@@ -220,8 +220,8 @@ largon2_cfg_variant(lua_State *L)
 /***
 Hashes a password with Argon2i, Argon2d, or Argon2id, producing an encoded
 hash.
-@function encrypt
-@param[type=string] plain Plain string to encrypt.
+@function hash_encoded
+@param[type=string] plain Plain string to hash_encoded.
 @param[type=string] salt Salt to use to hash the plain string.
 @param[type=table] options Options with which to hash the plain string. See
 `options`. This parameter is optional, if values are omitted the default ones
@@ -231,20 +231,20 @@ error occurred.
 @treturn string `err`: `nil`, or a string describing the error if any.
 
 @usage
-local hash, err = argon2.encrypt("password", "somesalt")
+local hash, err = argon2.hash_encoded("password", "somesalt")
 if err then
-  error("could not encrypt: " .. err)
+  error("could not hash_encoded: " .. err)
 end
 
 -- with options and variant
-local hash, err = argon2.encrypt("password", "somesalt", {
+local hash, err = argon2.hash_encoded("password", "somesalt", {
   t_cost = 4,
   m_cost = math.pow(2, 16), -- 65536 KiB
   variant = argon2.variants.argon2_d
 })
 */
 static int
-largon2_encrypt(lua_State *L)
+largon2_hash_encoded(lua_State *L)
 {
     const char             *plain, *salt;
     char                   *encoded, *err_msg;
@@ -459,7 +459,7 @@ luaL_setfuncs(lua_State *l, const luaL_Reg *reg, int nup)
 
 
 static const luaL_Reg largon2[] = { { "verify", largon2_verify },
-                                    { "encrypt", largon2_encrypt },
+                                    { "hash_encoded", largon2_hash_encoded },
                                     { "t_cost", largon2_cfg_t_cost },
                                     { "m_cost", largon2_cfg_m_cost },
                                     { "parallelism", largon2_cfg_parallelism },

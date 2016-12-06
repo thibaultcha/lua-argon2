@@ -7,6 +7,9 @@
 - :warning: This version is only compatible with Argon2
   [20160406](https://github.com/P-H-C/phc-winner-argon2/releases/tag/20160406)
   and later.
+- :warning: Renamed the `encrypt()` function to `hash_encoded()`, in order to
+  carry a stronger meaning and to eventually implement a `hash_raw()` function
+  in the future.
 - New `variants` field with supported Argon2 encoding variants (as userdatum).
   See documentation and the "Added" section of this Changelog.
 - Updated the default hashing options to match those of the Argon2 CLI:
