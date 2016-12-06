@@ -104,7 +104,7 @@ largon2_create_config(lua_State *L)
 }
 
 
-static largon2_config_t*
+static largon2_config_t *
 largon2_fetch_config(lua_State *L)
 {
     largon2_config_t *cfg;
@@ -117,7 +117,7 @@ largon2_fetch_config(lua_State *L)
 }
 
 
-static largon2_config_t*
+static largon2_config_t *
 largon2_arg_init(lua_State *L, int nargs)
 {
     if (lua_gettop(L) > nargs) {
