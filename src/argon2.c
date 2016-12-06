@@ -44,7 +44,7 @@ Argon2 hashing options. Those options can be given to `encrypt` as a table.
 If values are omitted, the default values of this module will be used.
 Default values of this module can be overriden with `m_cost()`, `t_cost()`,
 `parallelism()`, `hash_len()`, and `variant()`.
-@field t_cost Number of iterations (`number`, default: `2`).
+@field t_cost Number of iterations (`number`, default: `3`).
     argon2.encrypt("password", "salt", { t_cost = 4 })
 Can be set to a new default in lua-argon2 (C binding only) by calling:
     argon2.t_cost(4)
@@ -69,7 +69,7 @@ Can be set to a new default in lua-argon2 (C binding only) by calling:
     argon2.variant(argon2.variants.argon2_id)
 @table options
 */
-#define DEFAULT_T_COST 2
+#define DEFAULT_T_COST 3
 #define DEFAULT_M_COST 12
 #define DEFAULT_PARALLELISM 1
 #define DEFAULT_HASH_LEN 32
