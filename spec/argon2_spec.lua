@@ -245,7 +245,7 @@ describe("module settings", function()
 
     it("accepts t_cost module setting", function()
         finally(function()
-            argon2.t_cost(2)
+            argon2.t_cost(3)
         end)
 
         assert.equal(4, argon2.t_cost(4))
@@ -261,18 +261,18 @@ describe("module settings", function()
 
     it("accepts m_cost module setting", function()
         finally(function()
-            argon2.m_cost(12)
+            argon2.m_cost(4096)
         end)
 
         assert.equal(24, argon2.m_cost(24))
 
         local encoded = assert(argon2.hash_encoded("password", "somesalt"))
-        assert.matches("$argon2i$v=19$m=24,t=2,p=1$", encoded, nil, true)
+        assert.matches("$argon2i$v=19$m=24,t=3,p=1$", encoded, nil, true)
 
         encoded = assert(argon2.hash_encoded("password", "somesalt", {
             m_cost = 12
         }))
-        assert.matches("$argon2i$v=19$m=12,t=2,p=1$", encoded, nil, true)
+        assert.matches("$argon2i$v=19$m=12,t=3,p=1$", encoded, nil, true)
     end)
 
     it("accepts parallelism module setting", function()
@@ -285,12 +285,12 @@ describe("module settings", function()
         local encoded = assert(argon2.hash_encoded("password", "somesalt", {
             m_cost = 24
         }))
-        assert.matches("$argon2i$v=19$m=24,t=2,p=2$", encoded, nil, true)
+        assert.matches("$argon2i$v=19$m=24,t=3,p=2$", encoded, nil, true)
 
         encoded = assert(argon2.hash_encoded("password", "somesalt", {
             parallelism = 1
         }))
-        assert.matches("$argon2i$v=19$m=12,t=2,p=1$", encoded, nil, true)
+        assert.matches("$argon2i$v=19$m=4096,t=3,p=1$", encoded, nil, true)
     end)
 
     it("accepts hash_len module setting", function()
@@ -316,12 +316,12 @@ describe("module settings", function()
         assert.equal(argon2.variants.argon2_d, variant)
 
         local encoded = assert(argon2.hash_encoded("password", "somesalt"))
-        assert.matches("$argon2d$v=19$m=12,t=2,p=1$", encoded, nil, true)
+        assert.matches("$argon2d$v=19$m=4096,t=3,p=1$", encoded, nil, true)
 
         encoded = assert(argon2.hash_encoded("password", "somesalt", {
             variant = argon2.variants.argon2_i
         }))
-        assert.matches("$argon2i$v=19$m=12,t=2,p=1$", encoded, nil, true)
+        assert.matches("$argon2i$v=19$m=4096,t=3,p=1$", encoded, nil, true)
     end)
 end)
 
