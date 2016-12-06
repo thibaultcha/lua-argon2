@@ -15,7 +15,6 @@ original implementaiton.
 */
 
 
-#include <stdlib.h>
 #include <string.h>
 #include <argon2.h>
 #include <lauxlib.h>
