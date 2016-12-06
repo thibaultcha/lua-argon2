@@ -27,30 +27,30 @@ end)
 
 describe("encrypt()", function()
 
-    describe("variants", function()
-        it("returns an encoded hash", function()
+    describe("variants encoding", function()
+        it("argon2_i", function()
             local encoded = assert(argon2.encrypt("password", "somesalt"))
-            assert.matches("$argon2i$v=19$m=12,t=2,p=1$", encoded, nil, true)
+            assert.matches("$argon2i$v=19$m=12,t=3,p=1$", encoded, nil, true)
         end)
 
-        it("encodes with argon2_d", function()
+        it("argon2_d", function()
             local encoded = assert(argon2.encrypt("password", "somesalt", {
                 variant = argon2.variants.argon2_d
             }))
-            assert.matches("argon2d", encoded)
+            assert.matches("$argon2d$", encoded, nil, true)
         end)
 
-        it("encodes with argon2_id", function()
+        it("argon2_id", function()
             local encoded = assert(argon2.encrypt("password", "somesalt", {
                 variant = argon2.variants.argon2_id
             }))
-            assert.matches("argon2id", encoded)
+            assert.matches("$argon2id$", encoded, nil, true)
         end)
     end)
 
     it("calculates the appropriate encoded_len (triggered by long salt)", function()
         local encoded = assert(argon2.encrypt("password", string.rep("salt", 8)))
-        assert.matches("$argon2i$v=19$m=12,t=2,p=1$", encoded, nil, true)
+        assert.matches("$argon2i$v=19$m=12,t=3,p=1$", encoded, nil, true)
     end)
 
     describe("errors", function()

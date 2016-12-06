@@ -1,7 +1,12 @@
 /***
-Lua C binding for the Argon2 password hashing algorithm.
+Lua C binding for the Argon2 password hashing function. Compatible with Lua
+5.x and LuaJIT.
 See the [Argon2 documentation](https://github.com/P-H-C/phc-winner-argon2) for
 in-depth instructions and details about Argon2.
+
+This module's version is compatible with Argon2
+[20161029](https://github.com/P-H-C/phc-winner-argon2/releases/tag/20161029)
+and later.
 
 Note: this document is also valid for the
 [lua-argon2-ffi](https://github.com/thibaultcha/lua-argon2-ffi) module: an FFI
@@ -39,12 +44,14 @@ Argon2 hashing options. Those options can be given to `encrypt` as a table.
 If values are omitted, the default values of this module will be used.
 Default values of this module can be overriden with `m_cost()`, `t_cost()`,
 `parallelism()`, `hash_len()`, and `variant()`.
-@field t_cost Number of iterations (`number`, default: `2`).
+@field t_cost Number of iterations (`number`, default: `3`).
     argon2.encrypt("password", "salt", { t_cost = 4 })
 Can be set to a new default in lua-argon2 (C binding only) by calling:
     argon2.t_cost(4)
-@field m_cost Sets memory usage to 2^N KiB (`number`, default: `12`).
-    argon2.encrypt("password", "salt", { m_cost = 16 })
+@field m_cost Sets memory usage as KiB (`number`, default: `12`).
+    argon2.encrypt("password", "salt", {
+      m_cost = math.pow(2, 16) -- 2^16 aka 65536 KiB
+    })
 Can be set to a new default in lua-argon2 (C binding only) by calling:
     argon2.m_cost(16)
 @field parallelism Number of threads and compute lanes (`number`, default: `1`).
@@ -64,7 +71,7 @@ Can be set to a new default in lua-argon2 (C binding only) by calling:
     argon2.variant(argon2.variants.argon2_id)
 @table options
 */
-#define DEFAULT_T_COST 2
+#define DEFAULT_T_COST 3
 #define DEFAULT_M_COST 12
 #define DEFAULT_PARALLELISM 1
 #define DEFAULT_HASH_LEN 32
@@ -229,9 +236,10 @@ if err then
   error("could not encrypt: " .. err)
 end
 
--- with options
+-- with options and variant
 local hash, err = argon2.encrypt("password", "somesalt", {
   t_cost = 4,
+  m_cost = math.pow(2, 16), -- 65536 KiB
   variant = argon2.variants.argon2_d
 })
 */
