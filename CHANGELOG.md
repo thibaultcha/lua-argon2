@@ -1,6 +1,6 @@
 ## [Unreleased][unreleased]
 
-## [3.0.0]
+## [3.0.0] - 2016/12/06
 
 ### Changed
 

@@ -48,9 +48,15 @@
 <div id="content">
 
 <h1>Module <code>argon2</code></h1>
-<p>Lua C binding for the Argon2 password hashing algorithm.</p>
-<p>See the <a href="https://github.com/P-H-C/phc-winner-argon2">Argon2 documentation</a> for
+<p>Lua C binding for the Argon2 password hashing function.</p>
+<p> Compatible with Lua
+5.x and LuaJIT.
+See the <a href="https://github.com/P-H-C/phc-winner-argon2">Argon2 documentation</a> for
 in-depth instructions and details about Argon2.</p>
+
+<p>This module's version is compatible with Argon2
+<a href="https://github.com/P-H-C/phc-winner-argon2/releases/tag/20161029">20161029</a>
+and later.</p>
 
 <p>Note: this document is also valid for the
 <a href="https://github.com/thibaultcha/lua-argon2-ffi">lua-argon2-ffi</a> module: an FFI
@@ -58,7 +64,7 @@ implementation of this binding for LuaJIT which uses the same API as this
 original implementaiton.</p>
     <h3>Info:</h3>
     <ul>
-        <li><strong>Release</strong>: 2.0.0</li>
+        <li><strong>Release</strong>: 3.0.0</li>
         <li><strong>License</strong>: MIT</li>
         <li><strong>Author</strong>: Thibault Charbonnier</li>
     </ul>
@@ -67,7 +73,7 @@ original implementaiton.</p>
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#encrypt">encrypt (plain, salt, options)</a></td>
+	<td class="name" nowrap><a href="#hash_encoded">hash_encoded (plain, salt, options)</a></td>
 	<td class="summary">Hashes a password with Argon2i, Argon2d, or Argon2id, producing an encoded
 hash.</td>
 	</tr>
@@ -96,8 +102,8 @@ hash.</td>
 
     <dl class="function">
     <dt>
-    <a name = "encrypt"></a>
-    <strong>encrypt (plain, salt, options)</strong>
+    <a name = "hash_encoded"></a>
+    <strong>hash_encoded (plain, salt, options)</strong>
     </dt>
     <dd>
     Hashes a password with Argon2i, Argon2d, or Argon2id, producing an encoded
@@ -108,7 +114,7 @@ hash.
     <ul>
         <li><span class="parameter">plain</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-         Plain string to encrypt.
+         Plain string to hash_encoded.
         </li>
         <li><span class="parameter">salt</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
@@ -126,7 +132,7 @@ will be used.
     <ol>
         <li>
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        <code>encoded</code>: Encoded hAsh computed by Argon2, or <code>nil</code> if an
+        <code>encoded</code>: Encoded hash computed by Argon2, or <code>nil</code> if an
 error occurred.</li>
         <li>
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
@@ -137,15 +143,16 @@ error occurred.</li>
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example"><span class="keyword">local</span> hash, err = argon2.encrypt(<span class="string">"password"</span>, <span class="string">"somesalt"</span>)
+        <pre class="example"><span class="keyword">local</span> hash, err = argon2.hash_encoded(<span class="string">"password"</span>, <span class="string">"somesalt"</span>)
 <span class="keyword">if</span> err <span class="keyword">then</span>
-  <span class="global">error</span>(<span class="string">"could not encrypt: "</span> .. err)
+  <span class="global">error</span>(<span class="string">"could not hash_encoded: "</span> .. err)
 <span class="keyword">end</span>
 
-<span class="comment">-- with options
-</span><span class="keyword">local</span> hash, err = argon2.encrypt(<span class="string">"password"</span>, <span class="string">"somesalt"</span>, {
+<span class="comment">-- with options and variant
+</span><span class="keyword">local</span> hash, err = argon2.hash_encoded(<span class="string">"password"</span>, <span class="string">"somesalt"</span>, {
   t_cost = <span class="number">4</span>,
-  variant = argon2.variants.argon2_d
+  m_cost = <span class="global">math</span>.pow(<span class="number">2</span>, <span class="number">16</span>), <span class="comment">-- 65536 KiB
+</span>  variant = argon2.variants.argon2_d
 })</pre>
     </ul>
 
@@ -213,7 +220,7 @@ instead.</li>
     </dt>
     <dd>
     Argon2 hashing variants.  Those fields are <code>userdatums</code>, read-only values that
-can be fed to the module's configuration or the <a href="index.html#encrypt">encrypt</a> function.
+can be fed to the module's configuration or the <a href="index.html#hash_encoded">hash_encoded</a> function.
 See the <a href="https://github.com/P-H-C/phc-winner-argon2">Argon2 documentation</a>
 for a description of those variants.
 
@@ -247,7 +254,7 @@ for a description of those variants.
     <strong>options</strong>
     </dt>
     <dd>
-    Argon2 hashing options.  Those options can be given to <a href="index.html#encrypt">encrypt</a> as a table.
+    Argon2 hashing options.  Those options can be given to <a href="index.html#hash_encoded">hash_encoded</a> as a table.
 If values are omitted, the default values of this module will be used.
 Default values of this module can be overriden with <code>m_cost()</code>, <code>t_cost()</code>,
 <code>parallelism()</code>, <code>hash_len()</code>, and <code>variant()</code>.
@@ -257,8 +264,8 @@ Default values of this module can be overriden with <code>m_cost()</code>, <code
     <ul>
         <li><span class="parameter">t_cost</span>
 
-<p> Number of iterations (<code>number</code>, default: <code>2</code>).</p>
-<pre><code>argon2.encrypt("password", "salt", { t_cost = 4 })
+<p> Number of iterations (<code>number</code>, default: <code>3</code>).</p>
+<pre><code>argon2.hash_encoded("password", "salt", { t_cost = 4 })
 </code></pre>
 <p>Can be set to a new default in lua-argon2 (C binding only) by calling:</p>
 <pre><code>argon2.t_cost(4)
@@ -267,8 +274,10 @@ Default values of this module can be overriden with <code>m_cost()</code>, <code
         </li>
         <li><span class="parameter">m_cost</span>
 
-<p> Sets memory usage to 2^N KiB (<code>number</code>, default: <code>12</code>).</p>
-<pre><code>argon2.encrypt("password", "salt", { m_cost = 16 })
+<p> Sets memory usage as KiB (<code>number</code>, default: <code>4096</code>).</p>
+<pre><code>argon2.hash_encoded("password", "salt", {
+  m_cost = math.pow(2, 16) -- 2^16 aka 65536 KiB
+})
 </code></pre>
 <p>Can be set to a new default in lua-argon2 (C binding only) by calling:</p>
 <pre><code>argon2.m_cost(16)
@@ -278,7 +287,7 @@ Default values of this module can be overriden with <code>m_cost()</code>, <code
         <li><span class="parameter">parallelism</span>
 
 <p> Number of threads and compute lanes (<code>number</code>, default: <code>1</code>).</p>
-<pre><code>argon2.encrypt("password", "salt", { parallelism = 2 })
+<pre><code>argon2.hash_encoded("password", "salt", { parallelism = 2 })
 </code></pre>
 <p>Can be set to a new default in lua-argon2 (C binding only) by calling:</p>
 <pre><code>argon2.parallelism(2)
@@ -288,7 +297,7 @@ Default values of this module can be overriden with <code>m_cost()</code>, <code
         <li><span class="parameter">hash_len</span>
 
 <p> Length of the hash output length (<code>number</code>, default: <code>32</code>).</p>
-<pre><code>argon2.encrypt("password", "salt", { hash_len = 64 })
+<pre><code>argon2.hash_encoded("password", "salt", { hash_len = 64 })
 </code></pre>
 <p>Can be set to a new default in lua-argon2 (C binding only) by calling:</p>
 <pre><code>argon2.hash_len(64)
@@ -299,7 +308,7 @@ Default values of this module can be overriden with <code>m_cost()</code>, <code
 
 <p> Choose the Argon2 variant to use (Argon2i, Argon2d, Argon2id)
 from the <a href="index.html#variants">variants</a> table. (<code>userdata</code>, default: <code>argon2.variants.argon2_i</code>).</p>
-<pre><code>argon2.encrypt("password", "salt", { variant = argon2.variants.argon2_d })
+<pre><code>argon2.hash_encoded("password", "salt", { variant = argon2.variants.argon2_d })
 </code></pre>
 <p>Can be set to a new default in lua-argon2 (C binding only) by calling:</p>
 <pre><code>argon2.variant(argon2.variants.argon2_i)
@@ -322,7 +331,7 @@ argon2.variant(argon2.variants.argon2_id)
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2016-12-02 00:36:34 </i>
+<i style="float:right;">Last updated 2016-12-06 12:45:15 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
