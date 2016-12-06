@@ -1,12 +1,14 @@
 # lua-argon2
+
 [![Module Version][badge-version-image]][luarocks-argon2]
 [![Build Status][badge-travis-image]][badge-travis-url]
 [![Coverage Status][badge-coveralls-image]][badge-coveralls-url]
 
 Lua binding for [Argon2]. Compatible with Lua 5.x and LuaJIT.
 
-> For LuaJIT or [ngx_lua]/[OpenResty] usage, consider
-> [lua-argon2-ffi](https://github.com/thibaultCha/lua-argon2-ffi).
+> For LuaJIT or [ngx_lua]/[OpenResty] usage, consider the FFI implementation
+> if this binding:
+> [lua-argon2-ffi](https://github.com/thibaultcha/lua-argon2-ffi).
 
 ### Prerequisites
 
@@ -18,6 +20,9 @@ Compatibility:
 - Version `2.x` of this module is compatible with Argon2
   [`20160406`](https://github.com/P-H-C/phc-winner-argon2/releases/tag/20160406)
   to [`20161029`](https://github.com/P-H-C/phc-winner-argon2/releases/tag/20161029)
+- Version `3.x` of this module is compatible with Argon2
+  [`20161029`](https://github.com/P-H-C/phc-winner-argon2/releases/tag/20161029)
+  and later
 
 See the [CI builds][badge-coveralls-url] for the status of the currently
 supported versions.
@@ -34,7 +39,7 @@ $ luarocks install argon2 ARGON2_INCDIR="..." ARGON2_LIBDIR="..."
 must contain the compiled shared library for your platform.
 
 Or by using the Makefile (use the provided variables to point it to your Lua
-and argon2 installations):
+and Argon2 installations):
 
 ```
 $ make
@@ -58,13 +63,13 @@ local encoded = assert(argon2.encrypt("password", "somesalt"))
 
 --- Argon2d
 local encoded = assert(argon2.encrypt("password", "somesalt", {
-    variant = argon2.variants.argon2_d
+  variant = argon2.variants.argon2_d
 }))
 -- encoded is "$argon2d$m=12,t=2,p=1$c29tZXNhbHQ$mfklun4fYCbv2Hw0UnZZ56xAqWbjD+XRMSN9h6SfLe4"
 
 --- Argon2id
 local encoded = assert(argon2.encrypt("password", "somesalt", {
-    variant = argon2.variants.argon2_id
+  variant = argon2.variants.argon2_id
 }))
 -- encoded is "$argon2id$v=19$m=12,t=2,p=1$c29tZXNhbHQ$fJLcV2WII/sn+PjBK/b9YZfZFTNzU+21hyVt7xUWHDU"
 
@@ -122,6 +127,6 @@ implementation.
 
 [badge-travis-url]: https://travis-ci.org/thibaultcha/lua-argon2
 [badge-travis-image]: https://travis-ci.org/thibaultcha/lua-argon2.svg?branch=master
-[badge-version-image]: https://img.shields.io/badge/version-2.0.0-blue.svg?style=flat
+[badge-version-image]: https://img.shields.io/badge/version-3.0.0-blue.svg?style=flat
 [badge-coveralls-url]: https://coveralls.io/github/thibaultcha/lua-argon2?branch=master
 [badge-coveralls-image]: https://coveralls.io/repos/github/thibaultcha/lua-argon2/badge.svg?branch=master
