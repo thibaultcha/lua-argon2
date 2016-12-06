@@ -3,7 +3,7 @@ LIB_NAME = argon2
 CC            ?= gcc
 LUA_VERSION   ?= 5.1
 LIBFLAG       ?= -shared
-LUA_CFLAGS    ?= -O2 -fPIC -Wall -Werror
+LUA_CFLAGS    ?= -O2 -fPIC -Wall -Werror -ansi -pedantic
 
 PREFIX        ?= /usr/local
 LUA_INCDIR    ?= $(PREFIX)/include
