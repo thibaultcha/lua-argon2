@@ -12,7 +12,7 @@
 
 ### Added
 
-- :stars: Support for Argon2_id encoding variant.
+- :stars: Support for Argon2id encoding variant.
   [#24](https://github.com/thibaultcha/lua-argon2/pull/24)
 - We now automatically compute the length of the retrieved encoded hash from
   `encrypt()`. [#21](https://github.com/thibaultcha/lua-argon2/pull/21)
@@ -78,7 +78,7 @@
 
 Initial release with support for Argon2
 [20151206](https://github.com/P-H-C/phc-winner-argon2/releases/tag/20151206).
-Implement a C bridge for Argon2_i and Argon2_d encoding and a
+Implement a C bridge for Argon2i and Argon2d encoding and a
 Lua module for input validation.
 
 [unreleased]: https://github.com/thibaultcha/lua-argon2/compare/3.0.0...master

@@ -48,8 +48,10 @@ Default values of this module can be overriden with `m_cost()`, `t_cost()`,
     argon2.encrypt("password", "salt", { t_cost = 4 })
 Can be set to a new default in lua-argon2 (C binding only) by calling:
     argon2.t_cost(4)
-@field m_cost Sets memory usage to 2^N KiB (`number`, default: `12`).
-    argon2.encrypt("password", "salt", { m_cost = 16 })
+@field m_cost Sets memory usage as KiB (`number`, default: `12`).
+    argon2.encrypt("password", "salt", {
+      m_cost = math.pow(2, 16) -- 2^16 aka 65536 KiB
+    })
 Can be set to a new default in lua-argon2 (C binding only) by calling:
     argon2.m_cost(16)
 @field parallelism Number of threads and compute lanes (`number`, default: `1`).
@@ -234,9 +236,10 @@ if err then
   error("could not encrypt: " .. err)
 end
 
--- with options
+-- with options and variant
 local hash, err = argon2.encrypt("password", "somesalt", {
   t_cost = 4,
+  m_cost = math.pow(2, 16), -- 65536 KiB
   variant = argon2.variants.argon2_d
 })
 */

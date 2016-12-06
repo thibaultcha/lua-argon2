@@ -99,10 +99,10 @@ local encoded = assert(argon2.encrypt("password", "somesalt", {
 -- Hashing options
 local encoded = assert(argon2.encrypt("password", "somesalt", {
   t_cost = 4,
-  m_cost = 16,
+  m_cost = math.pow(2, 16), -- 65536 KiB
   parallelism = 2
 }))
--- encoded is "$argon2i$v=19$m=16,t=4,p=2$c29tZXNhbHQ$zeUdR8y+Dqo4B5gDTYJzYVlJjVeg2rY5Le1/pp/wdVQ"
+-- encoded is "$argon2i$v=19$m=65536,t=4,p=2$c29tZXNhbHQ$n6x5DKNWV8BOeKemQJRk7BU3hcaCVomtn9TCyEA0inM"
 
 -- Changing the default options (those arguments are the current defaults)
 argon2.t_cost(3)
