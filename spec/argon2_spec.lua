@@ -30,7 +30,7 @@ describe("encrypt()", function()
     describe("variants encoding", function()
         it("argon2_i", function()
             local encoded = assert(argon2.encrypt("password", "somesalt"))
-            assert.matches("$argon2i$v=19$m=12,t=3,p=1$", encoded, nil, true)
+            assert.matches("$argon2i$v=19$m=4096,t=3,p=1$", encoded, nil, true)
         end)
 
         it("argon2_d", function()
@@ -50,7 +50,7 @@ describe("encrypt()", function()
 
     it("calculates the appropriate encoded_len (triggered by long salt)", function()
         local encoded = assert(argon2.encrypt("password", string.rep("salt", 8)))
-        assert.matches("$argon2i$v=19$m=12,t=3,p=1$", encoded, nil, true)
+        assert.matches("$argon2i$v=19$m=4096,t=3,p=1$", encoded, nil, true)
     end)
 
     describe("errors", function()
@@ -251,12 +251,12 @@ describe("module settings", function()
         assert.equal(4, argon2.t_cost(4))
 
         local encoded = assert(argon2.encrypt("password", "somesalt"))
-        assert.matches("$argon2i$v=19$m=12,t=4,p=1$", encoded, nil, true)
+        assert.matches("$argon2i$v=19$m=4096,t=4,p=1$", encoded, nil, true)
 
         encoded = assert(argon2.encrypt("password", "somesalt", {
             t_cost = 2
         }))
-        assert.matches("$argon2i$v=19$m=12,t=2,p=1$", encoded, nil, true)
+        assert.matches("$argon2i$v=19$m=4096,t=2,p=1$", encoded, nil, true)
     end)
 
     it("accepts m_cost module setting", function()

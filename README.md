@@ -82,19 +82,19 @@ local argon2 = require "argon2"
 
 --- Argon2i
 local encoded = assert(argon2.encrypt("password", "somesalt"))
--- encoded is "$argon2i$v=19$m=12,t=3,p=1$c29tZXNhbHQ$w7VkIaAyCt0CP2Dn3zBtVvHTRsPDTTOrzfZ1l3AJ8xw"
+-- encoded is "$argon2i$v=19$m=4096,t=3,p=1$c29tZXNhbHQ$iWh06vD8Fy27wf9npn6FXWiCX4K6pW6Ue1Bnzz07Z8A"
 
 --- Argon2d
 local encoded = assert(argon2.encrypt("password", "somesalt", {
   variant = argon2.variants.argon2_d
 }))
--- encoded is "$argon2d$v=19$m=12,t=3,p=1$c29tZXNhbHQ$/vRHyRXZqHWCldQJSKTsRBdXwRgm/L4I7mjJBJuZ2Iw"
+-- encoded is "$argon2d$v=19$m=4096,t=3,p=1$c29tZXNhbHQ$2+JCoQtY/2x5F0VB9pEVP3xBNguWP1T25Ui0PtZuk8o"
 
 --- Argon2id
 local encoded = assert(argon2.encrypt("password", "somesalt", {
   variant = argon2.variants.argon2_id
 }))
--- encoded is "$argon2id$v=19$m=12,t=3,p=1$c29tZXNhbHQ$qRzE3pF4hcoTrz7o8mrjX2X758MPOvDl596RFoxzpd4"
+-- encoded is "$argon2id$v=19$m=4096,t=3,p=1$c29tZXNhbHQ$qLml5cbqFAO6YxVHhrSBHP0UWdxrIxkNcM8aMX3blzU"
 
 -- Hashing options
 local encoded = assert(argon2.encrypt("password", "somesalt", {
@@ -106,8 +106,9 @@ local encoded = assert(argon2.encrypt("password", "somesalt", {
 
 -- Changing the default options (those arguments are the current defaults)
 argon2.t_cost(3)
-argon2.m_cost(12)
+argon2.m_cost(4096)
 argon2.parallelism(1)
+argon2.hash_len(32)
 argon2.variant(argon2.variants.argon2_i)
 ```
 

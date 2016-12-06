@@ -48,7 +48,7 @@ Default values of this module can be overriden with `m_cost()`, `t_cost()`,
     argon2.encrypt("password", "salt", { t_cost = 4 })
 Can be set to a new default in lua-argon2 (C binding only) by calling:
     argon2.t_cost(4)
-@field m_cost Sets memory usage as KiB (`number`, default: `12`).
+@field m_cost Sets memory usage as KiB (`number`, default: `4096`).
     argon2.encrypt("password", "salt", {
       m_cost = math.pow(2, 16) -- 2^16 aka 65536 KiB
     })
@@ -72,7 +72,7 @@ Can be set to a new default in lua-argon2 (C binding only) by calling:
 @table options
 */
 #define DEFAULT_T_COST 3
-#define DEFAULT_M_COST 12
+#define DEFAULT_M_COST 4096
 #define DEFAULT_PARALLELISM 1
 #define DEFAULT_HASH_LEN 32
 
@@ -226,7 +226,7 @@ hash.
 @param[type=table] options Options with which to hash the plain string. See
 `options`. This parameter is optional, if values are omitted the default ones
 will be used.
-@treturn string `encoded`: Encoded hAsh computed by Argon2, or `nil` if an
+@treturn string `encoded`: Encoded hash computed by Argon2, or `nil` if an
 error occurred.
 @treturn string `err`: `nil`, or a string describing the error if any.
 

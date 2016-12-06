@@ -9,6 +9,8 @@
   and later.
 - New `variants` field with supported Argon2 encoding variants (as userdatum).
   See documentation and the "Added" section of this Changelog.
+- Updated the default hashing options to match those of the Argon2 CLI:
+  `t_cost = 3`, `m_cost = 4096`, `parallelism = 1`, `hash_len = 32`.
 
 ### Added
 
