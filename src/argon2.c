@@ -442,7 +442,7 @@ largon2_push_argon2_variants_table(lua_State *L)
  * luaL_setfuncs() is used to create a module table where the functions have
  * largon2_config_t as their first upvalue. Code borrowed from Lua 5.2 source. */
 static void
-luaL_setfuncs(lua_State *l, const luaL_Reg *reg, int nup)
+compat_luaL_setfuncs(lua_State *l, const luaL_Reg *reg, int nup)
 {
     int i;
 
@@ -455,6 +455,8 @@ luaL_setfuncs(lua_State *l, const luaL_Reg *reg, int nup)
     }
     lua_pop(l, nup); /* remove upvalues */
 }
+#else
+#define compat_luaL_setfuncs(L, l, nup) luaL_setfuncs(L, l, nup)
 #endif
 
 
@@ -474,7 +476,7 @@ luaopen_argon2(lua_State *L)
     lua_newtable(L);
 
     largon2_create_config(L);
-    luaL_setfuncs(L, largon2, 1);
+    compat_luaL_setfuncs(L, largon2, 1);
 
     /* push argon2.variants table */
 
