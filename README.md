@@ -31,7 +31,7 @@ Compatibility:
   to [`20161029`](https://github.com/P-H-C/phc-winner-argon2/releases/tag/20161029).
 - Version `3.x` of this module is compatible with Argon2
   [`20161029`](https://github.com/P-H-C/phc-winner-argon2/releases/tag/20161029)
-  and later.
+  and above.
 
 See the [CI builds][badge-coveralls-url] for the status of the currently
 supported versions.
