@@ -28,7 +28,11 @@ original implementaiton.
 
 
 #ifndef LUA_51
-#define LUA_51 !defined(LUA_VERSION_NUM) || LUA_VERSION_NUM < 502
+#if !defined(LUA_VERSION_NUM) || LUA_VERSION_NUM < 502
+#define LUA_51 1
+#else
+#define LUA_51 0
+#endif
 #endif
 
 
@@ -76,10 +80,10 @@ Can be set to a new default in lua-argon2 (C binding only) by calling:
     argon2.variant(argon2.variants.argon2_id)
 @table options
 */
-#define DEFAULT_T_COST 3
-#define DEFAULT_M_COST 4096
-#define DEFAULT_PARALLELISM 1
-#define DEFAULT_HASH_LEN 32
+#define LUA_ARGON2_DEFAULT_T_COST 3
+#define LUA_ARGON2_DEFAULT_M_COST 4096
+#define LUA_ARGON2_DEFAULT_PARALLELISM 1
+#define LUA_ARGON2_DEFAULT_HASH_LEN 32
 
 
 typedef struct largon2_config_s largon2_config_t;
@@ -101,10 +105,10 @@ largon2_create_config(lua_State *L)
     largon2_config_t *cfg;
 
     cfg              = lua_newuserdata(L, sizeof(*cfg));
-    cfg->t_cost      = DEFAULT_T_COST;
-    cfg->m_cost      = DEFAULT_M_COST;
-    cfg->parallelism = DEFAULT_PARALLELISM;
-    cfg->hash_len    = DEFAULT_HASH_LEN;
+    cfg->t_cost      = LUA_ARGON2_DEFAULT_T_COST;
+    cfg->m_cost      = LUA_ARGON2_DEFAULT_M_COST;
+    cfg->parallelism = LUA_ARGON2_DEFAULT_PARALLELISM;
+    cfg->hash_len    = LUA_ARGON2_DEFAULT_HASH_LEN;
     cfg->variant     = Argon2_i;
 }
 
