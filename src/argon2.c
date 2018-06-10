@@ -27,6 +27,11 @@ original implementaiton.
 #include <lualib.h>
 
 
+#ifndef LUA_51
+#define LUA_51 !defined(LUA_VERSION_NUM) || LUA_VERSION_NUM < 502
+#endif
+
+
 /***
 Argon2 hashing variants. Those fields are `userdatums`, read-only values that
 can be fed to the module's configuration or the `hash_encoded` function.
@@ -310,8 +315,12 @@ largon2_hash_encoded(lua_State *L)
     encoded_len = argon2_encodedlen(t_cost, m_cost, parallelism, saltlen,
                                     hash_len, variant);
 
+#if LUA_51
     luaL_buffinit(L, &buf);
     encoded = luaL_prepbuffer(&buf);
+#else
+    encoded = luaL_buffinitsize(L, &buf, encoded_len);
+#endif
 
     if (variant == Argon2_d) {
         ret_code =
@@ -329,8 +338,12 @@ largon2_hash_encoded(lua_State *L)
                                salt, saltlen, hash_len, encoded, encoded_len);
     }
 
+#if LUA_51
     luaL_addsize(&buf, encoded_len);
     luaL_pushresult(&buf);
+#else
+    luaL_pushresultsize(&buf, encoded_len);
+#endif
 
     if (ret_code != ARGON2_OK) {
         err_msg = (char *) argon2_error_message(ret_code);
@@ -436,7 +449,7 @@ largon2_push_argon2_variants_table(lua_State *L)
 }
 
 
-#if !defined(LUA_VERSION_NUM) || LUA_VERSION_NUM < 502
+#if LUA_51
 /* Compatibility for Lua 5.1.
  *
  * luaL_setfuncs() is used to create a module table where the functions have
