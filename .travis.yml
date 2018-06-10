@@ -14,6 +14,8 @@ env:
   global:
     - ARGON2_VERSION=20171227
     - ARGON2_DIR=$HOME/argon2
+    - ARGON2_INCDIR=$ARGON2_DIR/include
+    - ARGON2_LIBDIR=$ARGON2_DIR/lib
   matrix:
     - LUA="lua 5.1"
     - LUA="lua 5.2"
@@ -48,7 +50,10 @@ before_install:
   - luarocks install busted > build.log 2>&1 || (cat build.log && exit 1)
 
 install:
-  - luarocks make CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage" ARGON2_INCDIR=$ARGON2_DIR/include ARGON2_LIBDIR=$ARGON2_DIR/lib
+  - if [ "$LUA" != "lua 5.3" ]; then make LUA_INCDIR=$PWD/lua_install/include; fi
+  - if [ "$LUA" == "lua 5.3" ]; then make LUA_INCDIR=$PWD/lua_install/include CFLAGS="-O2 -fPIC -ansi -Wall -Werror -Wpedantic -DLUA_USE_C89"; fi
+  - make clean
+  - luarocks make CFLAGS="-O2 -fPIC -ftest-coverage -fprofile-arcs" LIBFLAG="-shared --coverage" ARGON2_DIR=$ARGON2_DIR
   - make clean
 
 script:
