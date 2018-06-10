@@ -1,4 +1,11 @@
-## [Unreleased][unreleased]
+## [3.0.1] - 2018/06/10
+
+### Changed
+
+- Ensure this module is compatible with C90 standard.
+  [#33](https://github.com/thibaultcha/lua-argon2/pull/33)
+- Minor improvements when using the Lua 5.2/5.3 Buffer API.
+  [#34](https://github.com/thibaultcha/lua-argon2/pull/34)
 
 ## [3.0.0] - 2016/12/06
 
@@ -86,7 +93,7 @@ Initial release with support for Argon2
 Implement a C bridge for Argon2i and Argon2d encoding and a
 Lua module for input validation.
 
-[unreleased]: https://github.com/thibaultcha/lua-argon2/compare/3.0.0...master
+[3.0.1]: https://github.com/thibaultcha/lua-argon2/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/thibaultcha/lua-argon2/compare/2.0.0...3.0.0
 [2.0.0]: https://github.com/thibaultcha/lua-argon2/compare/1.2.0...2.0.0
 [1.2.0]: https://github.com/thibaultcha/lua-argon2/compare/1.1.1...1.2.0

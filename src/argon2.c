@@ -16,7 +16,7 @@ original implementaiton.
 @module argon2
 @author Thibault Charbonnier
 @license MIT
-@release 3.0.0
+@release 3.0.1
 */
 
 
@@ -499,7 +499,7 @@ luaopen_argon2(lua_State *L)
     largon2_push_argon2_variants_table(L);
     lua_setfield(L, -2, "variants");
 
-    lua_pushstring(L, "3.0.0");
+    lua_pushstring(L, "3.0.1");
     lua_setfield(L, -2, "_VERSION");
 
     lua_pushstring(L, "Thibault Charbonnier");
