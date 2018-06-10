@@ -2,7 +2,7 @@ local argon2 = require "argon2"
 
 describe("argon2", function()
     it("_VERSION field", function()
-        assert.equal("3.0.0", argon2._VERSION)
+        assert.matches("%d%.%d%.%d", argon2._VERSION)
     end)
 
     it("_AUTHOR field", function()
