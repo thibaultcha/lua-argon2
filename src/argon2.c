@@ -21,6 +21,7 @@ original implementaiton.
 
 
 #include <string.h>
+#include <stdio.h>
 #include <argon2.h>
 #include <lauxlib.h>
 #include <lua.h>
@@ -153,9 +154,8 @@ largon2_integer_opt(lua_State *L, uint32_t optidx, uint32_t argidx,
             *property = value;
 
         } else {
-            snprintf(errmsg, sizeof(errmsg),
-                     "expected %s to be a number, got %s",
-                     key, luaL_typename(L, optidx));
+            sprintf(errmsg, "expected %s to be a number, got %s",
+                    key, luaL_typename(L, optidx));
             luaL_argerror(L, argidx, errmsg);
         }
     }
@@ -304,9 +304,8 @@ largon2_hash_encoded(lua_State *L)
         if (!lua_isnil(L, -1)) {
             if (!lua_islightuserdata(L, -1)) {
                 char errmsg[64];
-                snprintf(errmsg, sizeof(errmsg),
-                         "expected variant to be a number, got %s",
-                         luaL_typename(L, -1));
+                sprintf(errmsg, "expected variant to be a number, got %s",
+                        luaL_typename(L, -1));
                 luaL_argerror(L, 3, errmsg);
             }
 
