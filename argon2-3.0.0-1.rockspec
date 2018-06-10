@@ -9,6 +9,12 @@ description = {
   homepage = "https://github.com/thibaultcha/lua-argon2",
   license = "MIT"
 }
+external_dependencies = {
+  ARGON2 = {
+    header = "argon2.h",
+    library = "argon2"
+  }
+}
 build = {
   type = "builtin",
   modules = {
