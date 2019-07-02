@@ -12,7 +12,7 @@ cache:
 
 env:
   global:
-    - ARGON2_VERSION=20171227
+    - ARGON2_VERSION=20190702
     - ARGON2_DIR=$HOME/argon2
     - ARGON2_INCDIR=$ARGON2_DIR/include
     - ARGON2_LIBDIR=$ARGON2_DIR/lib
@@ -22,8 +22,9 @@ env:
     - LUA="lua 5.3"
     - LUA="luajit 2.0"
     - LUA="luajit 2.1"
-    - LUA="lua 5.3" ARGON2_VERSION="20161029"
-    - LUA="lua 5.3" ARGON2_VERSION="HEAD"
+    - LUA="lua 5.3" ARGON2_VERSION=20161029
+    - LUA="lua 5.3" ARGON2_VERSION=20171227
+    - LUA="lua 5.3" ARGON2_VERSION=HEAD
 
 matrix:
   fast_finish: true
@@ -40,7 +41,7 @@ before_install:
   - if [ "$ARGON2_VERSION" != "HEAD" ]; then git checkout $ARGON2_VERSION; fi
   - make > build.log 2>&1 || (cat build.log && exit 1)
   - make test > build.log 2>&1 || (cat build.log && exit 1)
-  - make install PREFIX="$ARGON2_DIR" > build.log 2>&1 || (cat build.log && exit 1)
+  - make install PREFIX="$ARGON2_DIR" LIBRARY_REL=lib > build.log 2>&1 || (cat build.log && exit 1)
   - if [ "$ARGON2_VERSION" == "20161029" ]; then ln -s $ARGON2_DIR/lib/libargon2.so $ARGON2_DIR/lib/libargon2.so.0; fi
   - popd
   - popd
