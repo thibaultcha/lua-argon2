@@ -8,7 +8,7 @@ Lua C binding for the [Argon2] password hashing function. Compatible with
 Lua 5.x and LuaJIT.
 
 > For LuaJIT or [ngx_lua]/[OpenResty] usage, consider the FFI implementation
-> if this binding:
+> of this binding:
 > [lua-argon2-ffi](https://github.com/thibaultcha/lua-argon2-ffi).
 
 ### Table of Contents
